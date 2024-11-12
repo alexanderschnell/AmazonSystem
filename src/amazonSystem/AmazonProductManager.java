@@ -17,6 +17,10 @@ public class AmazonProductManager {
 	public final int OPTION7_SRC = 7;
 	public static Scanner input = new Scanner(System.in);
 	private AmazonProductList productList;
+	
+	//TODO FIND OUT WHA TIS HAPPENING WITH PRODUCT LIST CLASS AND PRODUCT MANAGER CLASS
+	// METHODS INCOMPLETE ON MANY CLASSES (AMAZONCUSTOMER ARRAYLIST / AMAZONPRODUCT ARRAY LIST)
+	
 
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
@@ -25,6 +29,7 @@ public class AmazonProductManager {
 
 	public AmazonProductManager() {
 		productList = new AmazonProductList();
+		
 	}
 
 	public static void main(String[] args) {
