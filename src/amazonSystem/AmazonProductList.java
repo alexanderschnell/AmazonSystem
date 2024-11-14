@@ -1,4 +1,4 @@
-package amazonSystem;
+package amazonsystem;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,7 +34,7 @@ public class AmazonProductList {
 		}
 	}
 
-	public void createList(String fileName) throws AmazonProductException {
+	public void createList(String fileName) throws AmazonException {
 		bestsellers.clear(); 
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			String line;
@@ -73,7 +73,7 @@ public class AmazonProductList {
 			}
 
 		} catch (IOException e) {
-			throw new AmazonProductException(ANSI_RED + "Error reading file: " + fileName + ANSI_RESET);
+			throw new AmazonException(ANSI_RED + "Error reading file: " + fileName + ANSI_RESET);
 
 		}
 	}	
@@ -130,7 +130,7 @@ public class AmazonProductList {
 			}
 		}
 	}
-	public void saveList(String fileName) throws AmazonProductException {
+	public void saveList(String fileName) throws AmazonException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
 
 			bw.write(String.join(",", DEFAULT_TITLE));
@@ -155,7 +155,7 @@ public class AmazonProductList {
 			}
 			System.out.println(ANSI_PURPLE + "Finished saving " + bestsellers.size() + " products." + ANSI_RESET);
 		} catch (IOException e) {
-			throw new AmazonProductException(ANSI_RED + "Error writing to file: " + e.getMessage() + ANSI_RESET);
+			throw new AmazonException(ANSI_RED + "Error writing to file: " + e.getMessage() + ANSI_RESET);
 		}
 	}
 

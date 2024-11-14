@@ -1,4 +1,4 @@
-package amazonSystem;
+package amazonsystem;
 
 public class AmazonCustomer {
 	
@@ -14,8 +14,30 @@ public class AmazonCustomer {
 	
 	//TODO ALL METHODS 
 	
-	public String[] createAmazonCustomer(AmazonCustomer customer) {
-		return createAmazonCustomer(customer);
+	public static AmazonCustomer createAmazonCustomer(String[] customerInfo) throws AmazonException {
+	    
+	    if (customerInfo == null || customerInfo.length != 3) {
+	        throw new AmazonException("Invalid customer data format");
+	    }
+	    
+	    try {
+	        int id = Integer.parseInt(customerInfo[0]);
+	        if (id <= 0) {
+	            throw new AmazonException("Invalid ID: must be positive");
+	        }
+	        
+	        if (customerInfo[1] == null || customerInfo[1].trim().isEmpty()) {
+	            throw new AmazonException("Name cannot be empty");
+	        }
+	        
+	        if (customerInfo[2] == null || customerInfo[2].trim().isEmpty()) {
+	            throw new AmazonException("Address cannot be empty");
+	        }
+	        
+	        return new AmazonCustomer(id, customerInfo[1], customerInfo[2]);
+	    } catch (NumberFormatException e) {
+	        throw new AmazonException("Invalid ID format");
+	    }
 	}
 	
 	public void addCredit() {
@@ -79,9 +101,11 @@ public class AmazonCustomer {
 	}
 	
 	public String toString() {
-		return ""; //FOR NOW
+		return "- Customer: [Id: " + id + "], [Name: " + name + "], [Address: " + address + "]"; 
 	}
 
+	//GETTERS & SETTERS
+	
 	public int getId() {
 		return id;
 	}

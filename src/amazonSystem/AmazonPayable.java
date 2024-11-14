@@ -1,11 +1,11 @@
-package amazonSystem;
+package amazonsystem;
 
 public interface AmazonPayable {
 	
 	//TODO ALL METHODS
 	
 	public static boolean pay() {
-		return true;
+		return true; //FOR NOW 
 	}
 }
 

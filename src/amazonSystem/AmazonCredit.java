@@ -1,4 +1,4 @@
-package amazonSystem;
+package amazonsystem;
 
 public abstract class AmazonCredit {
 	

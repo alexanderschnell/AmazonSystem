@@ -1,4 +1,4 @@
-package amazonSystem;
+package amazonsystem;
 
 public class AmazonCard extends AmazonCredit {
 	
