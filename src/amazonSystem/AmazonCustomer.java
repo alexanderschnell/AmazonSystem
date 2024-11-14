@@ -1,10 +1,18 @@
 package amazonsystem;
 
+import java.util.ArrayList;
+
 public class AmazonCustomer {
 	
 	private int id;
 	private String name;
 	private String address;
+	private ArrayList<AmazonCredit> credits = new ArrayList<>();
+	
+	public static final String ANSI_BLACK = "\u001B[30m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_RESET = "\u001B[0m";
 	
 	private AmazonCustomer(int id, String name, String address) {
 		this.setId(id);
@@ -40,15 +48,32 @@ public class AmazonCustomer {
 	    }
 	}
 	
-	public void addCredit() {
+	public void addCredit(AmazonCredit credit) {
+		if (credit != null) {
+			credits.add(credit);
+		}
+		
 		
 	}
 	
 	public void showCredits() {
+		if (credits == null || credits.size() == 0) {
+			System.out.println("The customer has 0 credits.");
+		} else
+		
+		for (int i = 0; i < credits.size(); i++) {
+			AmazonCredit credit = credits.get(i); 
+			
+			if (credit != null) {
+				System.out.println(ANSI_PURPLE + credit.toString() + ANSI_RESET);
+			}
+		}
 		
 	}
+		
 	
-	public void addProductsInWishList() {
+	public void addProductsInWishList(){
+		
 		
 	}
 	

@@ -1,34 +1,24 @@
 package amazonsystem;
 
 public class AmazonCard extends AmazonCredit {
-	
-	private String number;
-	private String expiration;
-	
-	private AmazonCard(String number, String expiration, float amount) {
-		super();
-		this.setNumber(number);
-		this.setExpiration(expiration);
-				
-	}
-	
-	public String[] createCredit(AmazonCard Card) {
-		return createCredit(Card);
-	}
+    private AmazonCard(float amount) {
+        super(amount);
+        setType(PaymentType.CARD);
+    }
 
-	public String getNumber() {
-		return number;
-	}
+    public static AmazonCard createCard(String[] cardInfo) throws AmazonException {
+        if (cardInfo == null || cardInfo.length != 1) {
+            throw new AmazonException("Invalid card input format");
+        }
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
-	public String getExpiration() {
-		return expiration;
-	}
-
-	public void setExpiration(String expiration) {
-		this.expiration = expiration;
-	}
+        try {
+            float amount = Float.parseFloat(cardInfo[0]);
+            if (amount <= 0) {
+                throw new AmazonException("Amount must be positive");
+            }
+            return new AmazonCard(amount);
+        } catch (NumberFormatException e) {
+            throw new AmazonException("Invalid amount format");
+        }
+    }
 }

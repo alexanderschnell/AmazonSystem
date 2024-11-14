@@ -3,6 +3,7 @@ package amazonsystem;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class AmazonManager {
 
 	public String fileName;
@@ -13,8 +14,11 @@ public class AmazonManager {
 	public final String OPTION3_SEARCH = "[C]";
 	public final String OPTION4_ADD_CUSTOMER = "[D]";
 	public final String OPTION5_SHOW_CUSTOMER = "[E]";
-	//public final int OPTION5_DEL = 5;
-	//public final int OPTION6_SAV = 6;
+	public final String OPTION6_ADD_CREDIT = "[F]";
+	public final String OPTION7_SHOW_CREDIT = "[G]";
+	public final String OPTION8_ADD_TO_WISHLIST = "[H]";
+	public final String OPTION9_REMOVE_FROM_WISHLIST = "[I]";
+	public final String OPTION10_SHOW_FROM_WISHLIST = "[J]";
 	
 	
 	public static Scanner input = new Scanner(System.in);
@@ -51,12 +55,11 @@ public class AmazonManager {
 	}
 	
 	public void menuController() throws AmazonException {
+		
 		String choice;
 		do {
-			
 			showMenu();
 			choice = input.nextLine();
-			
 			try {
 				
 				switch (choice.toUpperCase()) {
@@ -75,19 +78,24 @@ public class AmazonManager {
 				case "D":
 					addCustomer();
 					break;
-					
 				case "E":
 					showCustomer();
 					break;
-					/*
-				case OPTION5_DEL:
-					deleteProduct();
+				case "F":
+					addCreditToCustomer();
 					break;
-				case OPTION6_SAV:
-					saveProductList();
+				case "G":
+					showCreditFromCustomer();
 					break;
-					*/					
-				
+				case "H":
+					addProductinWishList();
+					break;
+				case "I":
+					addProductinWishList();
+					break;
+				case "J":
+					addProductinWishList();
+					break;				
 				default:
 					System.out.println(ANSI_RED + "Invalid input." + ANSI_RESET);
 				}
@@ -110,6 +118,14 @@ public class AmazonManager {
 		System.out.println("Customer options...................");
 		System.out.println(OPTION4_ADD_CUSTOMER + ". Add customer");
 		System.out.println(OPTION5_SHOW_CUSTOMER + ". Show customer\n");
+		System.out.println("USER\n");
+		System.out.println("Credit options.....................");
+		System.out.println(OPTION6_ADD_CREDIT + ". Add credits to customer");
+		System.out.println(OPTION7_SHOW_CREDIT + ". Show customer credits\n");
+		System.out.println("Wishlist Options...................");
+		System.out.println(OPTION8_ADD_TO_WISHLIST + ". Add product in wishlist");
+		System.out.println(OPTION9_REMOVE_FROM_WISHLIST + ". Remove product from wishlst");
+		System.out.println(OPTION10_SHOW_FROM_WISHLIST + ". Show products from wishlist\n");
 		System.out.println("...................................");
 		System.out.println(OPTION0_EXIT + ". Exit");
 		System.out.print("\nChoose an option: ");
@@ -209,16 +225,76 @@ public class AmazonManager {
 		
 	}
 	
-	public void addCreditToCustomer() {
-		
+	public void addCreditToCustomer() throws AmazonException {
+	    if (customerList.isEmpty()) {
+	        System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
+	        return;
+	    }
+
+	    System.out.print("Enter the Customer ID: ");
+	    try {
+	        int id = Integer.parseInt(input.nextLine());
+	        
+	        for (AmazonCustomer customer : customerList) {
+	            if (customer.getId() == id) {
+	                System.out.print("Enter the Type of credit ([1]: Cash, [2]: Check, [3]: Card): ");
+	                int choice = Integer.parseInt(input.nextLine());
+	               
+	                switch(choice) {
+	                    case 1:
+	                        System.out.print("Enter Cash value: ");
+	                        String amount = input.nextLine();
+	                        String[] cashInfo = {amount};
+	                        AmazonCash cash = AmazonCash.createCash(cashInfo);
+	                        customer.addCredit(cash);
+	                        System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+	                        return;
+	                    case 2:
+	                        System.out.print("Enter Check value: ");
+	                        String checkAmount = input.nextLine();
+	                        String[] checkInfo = {checkAmount};
+	                        AmazonCheck check = AmazonCheck.createCheck(checkInfo);
+	                        customer.addCredit(check);
+	                        System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+	                        return;
+	                    case 3:
+	                        System.out.print("Enter Card value: ");
+	                        String cardAmount = input.nextLine();
+	                        String[] cardInfo = {cardAmount};
+	                        AmazonCard card = AmazonCard.createCard(cardInfo);
+	                        customer.addCredit(card);
+	                        System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+	                        return;
+	                    default:
+	                        throw new AmazonException(ANSI_RED + "Invalid credit type selected" + ANSI_RESET);
+
+	                }
+	            }
+	        }
+	        System.out.println(ANSI_RED + "Customer with ID " + id + " not found." + ANSI_RESET);
+	        
+	    } catch (NumberFormatException e) {
+	        throw new AmazonException("Invalid input format");
+	    }
 	}
-	
+		
 	public void showCreditFromCustomer() {
-		
+
+		System.out.print("Enter the customer ID: ");
+		int id = Integer.parseInt(input.nextLine());
+
+		for (AmazonCustomer customer : customerList) {
+			if (customer.getId() == id) {
+
+				customer.showCredits();
+
+			}
+		}
+
 	}
-	
+
 	public void addProductinWishList() {
-		
+	
 	}
 	
 	public void removeProductFromWishList() {
