@@ -12,10 +12,10 @@ public class AmazonCard extends AmazonCredit {
     
     @Override
     public String toString() {
-        return "Credit: Type: " + getType() + 
-               ", Number: " + number + 
-               ", Expiration: " + expiration + 
-               ", Value: " + getAmount();
+        return "Credit Type: " + "[" + getType() + 
+               "], Card Number:  [" + number +  
+               "], Expiration Date:  [" + expiration + 
+               "], Credit Amount: [" + getAmount() + "]";
     }
 
     public static AmazonCard createCard(String[] cardInfo) throws AmazonException {

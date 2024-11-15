@@ -9,7 +9,7 @@ public class AmazonException extends Exception {
 
 	public AmazonException(String errorMessage) {
 		super();
-		System.err.println("AmazonProductException: " + errorMessage);
+		System.err.println(errorMessage);
 
 	}
 }

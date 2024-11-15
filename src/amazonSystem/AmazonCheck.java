@@ -11,9 +11,9 @@ public class AmazonCheck extends AmazonCredit {
     
     @Override
     public String toString() {
-        return "Credit: Type: " + getType() + 
-               ", Account: " + accountNumber + 
-               ", Value: " + getAmount();
+        return "Credit Type: [" + getType() + 
+               "], Account: [" + accountNumber + 
+               "], Value: [" + getAmount() + "]";
     }
 
     public static AmazonCheck createCheck(String[] checkInfo) throws AmazonException {

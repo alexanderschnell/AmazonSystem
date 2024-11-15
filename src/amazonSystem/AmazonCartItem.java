@@ -8,22 +8,17 @@ public class AmazonCartItem {
 	public AmazonCartItem(AmazonProduct product, int quantity) {
 		this.setProduct(product);
 		this.setQuantity(quantity);
-		
 	}
-	
-	//TODO ALL METHODS
-	
+
 	public float calSubTotal() {
-		return 0; //FOR NOW
+	    return product.getActual_price() * quantity;
 	}
 	
 	public String toString() {
-		return ""; //FOR NOW 
+	    return " = [" + product.getId() + ", " + product.getName() + "], Quantity = " + quantity;
 	}
 	
-	
-	//GETTERS AND SETTERS
-
+	// GETTERS AND SETTERS
 	public AmazonProduct getProduct() {
 		return product;
 	}

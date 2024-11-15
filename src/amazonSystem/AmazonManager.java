@@ -25,12 +25,12 @@ public class AmazonManager {
 	public final String OPTION12_REMOVE_FROM_CART = "[L]";
 	public final String OPTION13_SHOW_FROM_CART = "[M]";
 	public final String OPTION14_BUY_FROM_CART = "[N]";
-	
+
 	public static Scanner input = new Scanner(System.in);
-	
+
 	private AmazonProductList productList;
 	private ArrayList<AmazonCustomer> customerList;
-	
+
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -38,31 +38,30 @@ public class AmazonManager {
 
 	public AmazonManager() {
 		productList = new AmazonProductList();
-		customerList = new ArrayList<AmazonCustomer>();
-		
+		customerList = new ArrayList<AmazonCustomer>();		
 	}
 
 	public static void main(String[] args) {
-	    AmazonManager manager = new AmazonManager();
-	    try {
-	        manager.menuController();
-	    } catch (RuntimeException e) {
-	        System.err.println(ANSI_RED + "An unexpected critical error occurred: " + e.getMessage() + ANSI_RESET);
-	        e.printStackTrace();
-	        
-	    } catch (AmazonException e) {
+		AmazonManager manager = new AmazonManager();
+		try {
+			manager.menuController();
+		} catch (RuntimeException e) {
+			System.err.println(ANSI_RED + "An unexpected critical error occurred: " + e.getMessage() + ANSI_RESET);
+			e.printStackTrace();
+
+		} catch (AmazonException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void menuController() throws AmazonException {
-		
+
 		String choice;
 		do {
 			showMenu();
 			choice = input.nextLine();
 			try {
-				
+
 				switch (choice.toUpperCase()) {
 				case "Q":
 					exit();
@@ -117,12 +116,12 @@ public class AmazonManager {
 			}		
 		} while (!choice.equalsIgnoreCase("Q"));
 	}
-		
+
 	public void showMenu() {
 		System.out.println(ANSI_BLACK + "================================\r\n"
-										+ "||      Amazon Manager: A2    ||\r\n"
-										+ "================================\n");
-		
+				+ "||      Amazon Manager: A2    ||\r\n"
+				+ "================================\n");
+
 		System.out.println("***ADMIN***\n");
 		System.out.println("Product options....................");
 		System.out.println(OPTION1_LOAD + ". Load product list");
@@ -151,17 +150,17 @@ public class AmazonManager {
 		//System.out.println(OPTION4_EDT + ". Edit a product");
 		//System.out.println(OPTION5_DEL + ". Delete a product");
 		//System.out.println(OPTION6_SAV + ". Save product list");
-		
+
 	}
 
 	public void exit() {
 		System.out.println("============================================================\r\n"
-						+ "||     [Application ended] (Author: Alexander Schnell)    ||\r\n"
-						+ "============================================================" + ANSI_RESET);
+				+ "||     [Application ended] (Author: Alexander Schnell)    ||\r\n"
+				+ "============================================================" + ANSI_RESET);
 		input.close();
 		System.exit(0);
 	}
-	
+
 	// Taken from A1
 	public void loadProductList() throws AmazonException {
 		boolean isValidFile = false;
@@ -174,13 +173,13 @@ public class AmazonManager {
 				productList.createList(fileName);
 				System.out.println(ANSI_PURPLE + "Product list created successfully!" + ANSI_RESET);
 				isValidFile = true;
-				
+
 			} catch (AmazonException e) {
 				System.err.println("Failed to create product list. Please enter valid file name.");
 			}
 		}
 	}
-	
+
 	// Taken from A1
 	public void showProductList() {
 		if (productList == null || productList.getSize() == 0) {
@@ -193,55 +192,55 @@ public class AmazonManager {
 
 		for (int i = 0; i < productList.getSize(); i++) {
 			AmazonProduct product = productList.findProductByIndex(i);
-			
+
 			if (product != null) {
 				System.out.println(ANSI_PURPLE + product.toString() + ANSI_RESET);
 			}	
 		}
 	}
-	
+
 	// Taken from A1
 	public void searchInProducts() throws AmazonException  {
 		System.out.print("Enter a keyword to find: ");
 		String keyword = input.nextLine();
 		productList.search(keyword);
 	}
-	
+
 	public void addCustomer() throws AmazonException {
-	    System.out.print("Enter customer ID: ");
-	    String id = input.nextLine();
-	    System.out.print("Enter customer name: ");
-	    String name = input.nextLine();
-	    System.out.print("Enter customer address: ");
-	    String address = input.nextLine();
-	    
-	    String[] customerData = {id, name, address};
-	    try {
-	        AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
-	        customerList.add(newCustomer);
-	        System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
-	    } catch (AmazonException e) {
-	        System.err.println(ANSI_RED + "Error: " + e.getMessage() + ANSI_RESET);
-	    }
+		System.out.print("Enter customer ID: ");
+		String id = input.nextLine();
+		System.out.print("Enter customer name: ");
+		String name = input.nextLine();
+		System.out.print("Enter customer address: ");
+		String address = input.nextLine();
+
+		String[] customerData = {id, name, address};
+		try {
+			AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
+			customerList.add(newCustomer);
+			System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
+		} catch (AmazonException e) {
+			System.err.println(ANSI_RED + "Error: " + e.getMessage() + ANSI_RESET);
+		}
 	}
-	
+
 	public void showCustomer() {
 		if (customerList == null || customerList.size() == 0) {
 			System.out.println("The customer list is empty.");
 		} else
-			
+
 			System.out.println("[Printing customer(s) ...]");
-		
+
 		for (int i = 0; i < customerList.size(); i++) {
 			AmazonCustomer customer = customerList.get(i); 
-			
+
 			if (customer != null) {
 				System.out.println(ANSI_PURPLE + customer.toString() + ANSI_RESET);
 			}
 		}
-		
+
 	}
-	
+
 	public void addCreditToCustomer() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
@@ -314,127 +313,16 @@ public class AmazonManager {
 	}
 
 	public void addProductinWishList() throws AmazonException {
-	    if (customerList.isEmpty()) {
-	        System.out.println(ANSI_RED + "No customer found." + ANSI_RESET);
-	        return; 
-	    }
-
-	    System.out.print("Enter the Customer ID: ");
-	    try {
-	        int customerId = Integer.parseInt(input.nextLine());
-
-	        // Find customer
-	        AmazonCustomer customer = null;
-	        for (AmazonCustomer c : customerList) {
-	            if (c.getId() == customerId) {
-	                customer = c;
-	                break;
-	            }
-	        }
-
-	        if (customer == null) {
-	            System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
-	            return;  
-	        }
-
-	        System.out.print("Enter the Product ID to include in the wishlist: ");
-	        int productId = Integer.parseInt(input.nextLine());
-
-	        // Find product
-	        AmazonProduct product = productList.findProductById(productId); 
-
-	        if (product == null) {
-	            System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
-	            return;  
-	        }
-
-	        customer.addProductsInWishList(product);
-
-	    } catch (NumberFormatException e) {
-	        throw new AmazonException("Invalid input format.");
-	    }
-	}
-	
-	public void removeProductFromWishList() throws AmazonException {
 		if (customerList.isEmpty()) {
-			System.out.println(ANSI_RED + "No wishlists found." + ANSI_RESET);
-		} else
-		
-		System.out.print("Enter the Customer ID: ");
-		try {
-			int id = Integer.parseInt(input.nextLine());
-			
-			AmazonCustomer customer = null;
-			for (AmazonCustomer c : customerList) {
-				if (c.getId() == id) {
-					customer = c;
-					break;
-				}
-			}
-			
-			if (customer == null) {
-				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
-				return;
-			}
-			
-			 System.out.print("Enter the Product ID to include in the wishlist: ");
-		        int productId = Integer.parseInt(input.nextLine());
+			System.out.println(ANSI_RED + "No customer found." + ANSI_RESET);
+			return; 
+		}
 
-		        AmazonProduct product = productList.findProductById(productId); 
-
-		        if (product == null) {
-		            System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
-		            return;  
-		        }
-
-		        customer.removeProductInWishList(product);
-
-		    } catch (NumberFormatException e) {
-		        throw new AmazonException("Invalid input format.");
-		    }
-	}
-	
-	public void showWishList() {
-		if (customerList.isEmpty()) {
-			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
-			return;
-		}
-	
-		System.out.print("Enter the Customer ID: ");
-		try {
-		int id = Integer.parseInt(input.nextLine());
-		
-		
-		AmazonCustomer customer = null;
-		for (AmazonCustomer c : customerList) {
-			if (c.getId() == id) {
-				customer = c;
-				break;
-			}
-		}
-		
-		if (customer == null) {
-			System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
-			return;
-		}
-		
-		System.out.println("[Printing wishlist ...]");
-				customer.showWishList();
-			} catch (NumberFormatException e) {
-				System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
-		}
-	}
-		
-	public void addProductinCart() throws AmazonException {
-		if (customerList.isEmpty()) {
-			System.out.println(ANSI_RED + "No products found." + ANSI_RESET);
-			return;
-		}
 		System.out.print("Enter the Customer ID: ");
 		try {
 			int customerId = Integer.parseInt(input.nextLine());
-			
-			
+
+			// Find customer
 			AmazonCustomer customer = null;
 			for (AmazonCustomer c : customerList) {
 				if (c.getId() == customerId) {
@@ -442,57 +330,270 @@ public class AmazonManager {
 					break;
 				}
 			}
-			
+
+			if (customer == null) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;  
+			}
+
+			System.out.print("Enter the Product ID to include in the wishlist: ");
+			int productId = Integer.parseInt(input.nextLine());
+
+			// Find product
+			AmazonProduct product = productList.findProductById(productId); 
+
+			if (product == null) {
+				System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
+				return;  
+			}
+
+			customer.addProductsInWishList(product);
+
+		} catch (NumberFormatException e) {
+			throw new AmazonException("Invalid input format.");
+		}
+	}
+
+	public void removeProductFromWishList() throws AmazonException {
+		if (customerList.isEmpty()) {
+			System.out.println(ANSI_RED + "No wishlists found." + ANSI_RESET);
+		} else
+
+			System.out.print("Enter the Customer ID: ");
+		try {
+			int id = Integer.parseInt(input.nextLine());
+
+			AmazonCustomer customer = null;
+			for (AmazonCustomer c : customerList) {
+				if (c.getId() == id) {
+					customer = c;
+					break;
+				}
+			}
+
+			if (customer == null) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;
+			}
+
+			System.out.print("Enter the Product ID to  the wishlist: ");
+			int productId = Integer.parseInt(input.nextLine());
+
+			AmazonProduct product = productList.findProductById(productId); 
+
+			if (product == null) {
+				System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
+				return;  
+			}
+
+			customer.removeProductInWishList(product);
+
+		} catch (NumberFormatException e) {
+			throw new AmazonException("Invalid input format.");
+		}
+	}
+
+	public void showWishList() {
+		if (customerList.isEmpty()) {
+			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
+			return;
+		}
+
+		System.out.print("Enter the Customer ID: ");
+		try {
+			int id = Integer.parseInt(input.nextLine());
+
+
+			AmazonCustomer customer = null;
+			for (AmazonCustomer c : customerList) {
+				if (c.getId() == id) {
+					customer = c;
+					break;
+				}
+			}
+
+			if (customer == null) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;
+			}
+
+			System.out.println("[Printing wishlist ...]");
+			customer.showWishList();
+		} catch (NumberFormatException e) {
+			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
+		}
+	}
+
+	public void addProductinCart() throws AmazonException {
+		if (customerList.isEmpty()) {
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
+			return;
+		}
+		System.out.print("Enter the Customer ID: ");
+		try {
+			int customerId = Integer.parseInt(input.nextLine());
+
+			AmazonCustomer customer = null;
+			for (AmazonCustomer c : customerList) {
+				if (c.getId() == customerId) {
+					customer = c;
+					break;
+				}
+			}
+
 			if (customer == null) {
 				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
 				return;
 			}
 			System.out.print("Enter the Product ID to buy from your cart: ");
-			 int productId = Integer.parseInt(input.nextLine());
+			int productId = Integer.parseInt(input.nextLine());
 
-		        AmazonProduct product = productList.findProductById(productId); 
+			AmazonProduct product = productList.findProductById(productId); 
 
-		        if (product == null) {
-		            System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
-		            return;  
-		        }
-		        
-		        System.out.print("Enter the number of items to put in cart: ");
-		        int quantity = Integer.parseInt(input.nextLine());
-		        
-		        if (quantity <= 0) {
-		            System.out.println(ANSI_RED + "Quantity must be positive." + ANSI_RESET);
-		            return;
-		        }
+			if (product == null) {
+				System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
+				return;  
+			}
 
-		        customer.addItemInCart(product, quantity);
-		        System.out.println(ANSI_PURPLE + "Cart updated: [" + quantity + " of Product #" + productId + 
-		                          " added for Customer #" + customerId + "]" + ANSI_RESET);
+			System.out.print("Enter the number of items to put in cart: ");
+			int quantity = Integer.parseInt(input.nextLine());
 
-		    } catch (NumberFormatException e) {
-		        throw new AmazonException("Invalid input format.");
-		    }
+			if (quantity <= 0) {
+				System.out.println(ANSI_RED + "Quantity must be positive." + ANSI_RESET);
+				return;
+			}
+
+			customer.addItemInCart(product, quantity);
+			System.out.println(ANSI_PURPLE + "Cart updated: [" + quantity + " item(s) of Product #" + productId + 
+					" added for Customer #" + customerId + "]" + ANSI_RESET);
+
+		} catch (NumberFormatException e) {
+			throw new AmazonException("Invalid input format.");
 		}
-	
-	
-	public void removeProductFromCart() {
-		
 	}
-	
+
+	public void removeProductFromCart() throws AmazonException {
+		if (customerList.isEmpty()) {
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
+			return;
+		}
+		System.out.print("Enter the Customer ID: "); 
+		int customerId = Integer.parseInt(input.nextLine());
+
+		AmazonCustomer customer = null;
+		for (AmazonCustomer c : customerList) {
+			if (c.getId() == customerId) {
+				customer = c;
+				break;
+			}
+		}
+
+		if (customer == null) {
+			System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+			return;
+		}
+
+		System.out.print("Enter the Product ID to remove from your cart: ");
+		int productId = Integer.parseInt(input.nextLine());
+
+		AmazonProduct product = productList.findProductById(productId); 
+
+		if (product == null) {
+			System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
+			return;  
+		}
+
+		System.out.print("Enter the number of items to remove from cart: ");
+		int quantity = Integer.parseInt(input.nextLine());
+
+		if (quantity <= 0) {
+			System.out.println(ANSI_RED + "Quantity must be positive." + ANSI_RESET);
+			return;
+		}	        
+
+		customer.removeProductFromCart(product, quantity);
+	}
+
 	public void showProductsInCart() {
-		
+		if (customerList.isEmpty()) {
+			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
+			return;
+		}
+
+		System.out.print("Enter the Customer ID: ");
+		try {
+			int id = Integer.parseInt(input.nextLine());
+
+
+			AmazonCustomer customer = null;
+			for (AmazonCustomer c : customerList) {
+				if (c.getId() == id) {
+					customer = c;
+					break;
+				}
+			}
+
+			if (customer == null) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;
+			}
+
+			System.out.println("[Printing cart ...]");
+			customer.showCart();
+		} catch (NumberFormatException e) {
+			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
+		}
 	}
-	
-	public void payCart() {
-		
+
+	public void payCart() throws AmazonException {
+	    if (customerList.isEmpty()) {
+	        throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
+	    }
+
+	    System.out.print("Enter the Customer ID: ");
+	    int id = Integer.parseInt(input.nextLine());
+
+	    AmazonCustomer customer = null;
+	    for (AmazonCustomer c : customerList) {
+	        if (c.getId() == id) {
+	            customer = c;
+	            break;
+	        }
+	    }
+
+	    if (customer == null) {
+	        throw new AmazonException(ANSI_RED + "Customer not found." + ANSI_RESET);
+	    }
+
+	    if (customer.getCart() == null || customer.getCart().getCartItems().isEmpty()) {
+	        throw new AmazonException(ANSI_RED + "Cart is empty" + ANSI_RESET);
+	    }
+
+	    System.out.print("Confirm payment by typing 'p': ");
+	    String choice = input.nextLine();
+
+	    if (!choice.equalsIgnoreCase("p")) {
+	        throw new AmazonException(ANSI_RED + "No credits available" + ANSI_RESET);
+	    }
+
+	    float totalAmount = customer.getCart().calcSubTotal();
+	    if (customer.getCredits().getAmount() >= totalAmount) {
+	        customer.getCredits().deduct(totalAmount);
+	        customer.getCart().getCartItems().clear();
+	        System.out.println(ANSI_PURPLE + "Customer credit updated: Type: " + "[" + customer.getCredits().getType() +
+	                         "]," + " Credit Amount: " + "[" + customer.getCredits().getAmount() + "]");
+	        System.out.println("Cart empty - you can comment products now." + ANSI_RESET);
+	    } else {
+	        throw new AmazonException(ANSI_RED + "Insufficient credit amount" + ANSI_RESET);
+	    }
 	}
-	
+
 	public void addCommentToProduct() {
-		
+
 	}
-	
+
 	public void showComments() {
-		
+
 	}
 }
 
