@@ -8,6 +8,7 @@ public class AmazonCustomer {
 	private String name;
 	private String address;
 	private ArrayList<AmazonCredit> credits = new ArrayList<>();
+	private ArrayList<AmazonProduct> wishlist = new ArrayList<>();
 	
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
@@ -51,9 +52,7 @@ public class AmazonCustomer {
 	public void addCredit(AmazonCredit credit) {
 		if (credit != null) {
 			credits.add(credit);
-		}
-		
-		
+		}		
 	}
 	
 	public void showCredits() {
@@ -67,25 +66,50 @@ public class AmazonCustomer {
 			if (credit != null) {
 				System.out.println(ANSI_PURPLE + credit.toString() + ANSI_RESET);
 			}
+		}	
+	}
+		
+	public void addProductsInWishList(AmazonProduct product) throws AmazonException {
+		if (product == null) {
+			throw new AmazonException("Cannot add null product to wishlist");
 		}
-		
-	}
-		
-	public void addProductsInWishList(){
-		
-		
-	}
-	
-	public void removeProductInWishList() {
-		
-	}
-	
-	public boolean isProductInWishList() {
-		return true; //FOR NOW 
+		if (wishlist.contains(product)) {
+			throw new AmazonException("Product already exists in wishlist");
+		}
+			wishlist.add(product);
+			System.out.println(ANSI_PURPLE + "[Product " + product.getId() + " added into Customer #" + this.id + "'s list]" + ANSI_RESET);
+		}
+
+	public void removeProductInWishList(AmazonProduct product) throws AmazonException {
+		if (wishlist == null || wishlist.size() == 0) {
+			System.out.println("The wishlist is empty.");
+			return;
+		}
+		if (product == null) {
+			throw new AmazonException("Cannot remove null product from wishlist");
+		}
+
+		if (!wishlist.contains(product)) {
+			throw new AmazonException("Product not found in wishlist");
+		}
+
+		wishlist.remove(product);
+		System.out.println(ANSI_PURPLE + "[Product " + product.getId() + 
+				" removed from Customer #" + this.id + "'s wishlist]" + ANSI_RESET);
 	}
 	
 	public void showWishList() {
-		
+		if (wishlist == null || wishlist.size() == 0) {
+			System.out.println("The wishlist is empty.");
+		} else 
+			
+		for (int i = 0; i < wishlist.size(); i++) {
+			AmazonProduct product = wishlist.get(i);
+			
+			if (product != null) { 
+				System.out.println(ANSI_PURPLE + product.toString() + ANSI_RESET);
+			}	
+		}	
 	}
 	
 	public void addItemInCart() {

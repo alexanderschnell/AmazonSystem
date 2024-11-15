@@ -77,6 +77,7 @@ public class AmazonProductList {
 
 		}
 	}	
+	
 	public boolean delete(int id) {
 		for (int i = 0; i < bestsellers.size(); i++) {
 			if (bestsellers.get(i).getId() == id) {
@@ -130,6 +131,7 @@ public class AmazonProductList {
 			}
 		}
 	}
+	
 	public void saveList(String fileName) throws AmazonException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
 
@@ -168,6 +170,10 @@ public class AmazonProductList {
 		}
 		return field;
 	}	
+	
+	public ArrayList<AmazonProduct> getBestsellers() {
+	    return bestsellers;
+	}
 }
 
 
