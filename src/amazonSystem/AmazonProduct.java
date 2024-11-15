@@ -54,8 +54,7 @@ public class AmazonProduct {
 		"]"
 		;
 		
-		return str;
-			
+		return str;			
 	}
 	
 	// GETTERS & SETTERS

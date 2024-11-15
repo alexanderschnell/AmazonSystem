@@ -1,6 +1,10 @@
 package amazonsystem;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+//TODO
+//START IMPLEMENTING NEW METHODS 
 
 public class AmazonCustomer {
 	
@@ -9,6 +13,8 @@ public class AmazonCustomer {
 	private String address;
 	private ArrayList<AmazonCredit> credits = new ArrayList<>();
 	private ArrayList<AmazonProduct> wishlist = new ArrayList<>();
+	private AmazonCart cart;
+	
 	
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
@@ -19,9 +25,8 @@ public class AmazonCustomer {
 		this.setId(id);
 		this.setName(name);
 		this.setAddress(address); 
+		this.cart = new AmazonCart(this, new Date());
 	}
-	
-	//TODO ALL METHODS 
 	
 	public static AmazonCustomer createAmazonCustomer(String[] customerInfo) throws AmazonException {
 	    
@@ -112,9 +117,20 @@ public class AmazonCustomer {
 		}	
 	}
 	
-	public void addItemInCart() {
-		
-	}
+	public void addItemInCart(AmazonProduct product, int quantity) throws AmazonException {
+        if (cart == null) {
+            cart = new AmazonCart(this, new Date());
+        }
+        
+        if (product == null) {
+            throw new AmazonException("Cannot add null product to cart");
+        }
+        if (quantity <= 0) {
+            throw new AmazonException("Quantity must be positive");
+        }
+
+        cart.addItem(product, quantity);
+    }
 	
 	public void removeProductFromCart() {
 		
@@ -128,22 +144,10 @@ public class AmazonCustomer {
 		
 	}
 	
-	public void moveFromCartToComments() {
-		
-	}
-	
-	public boolean hasProductToComment() {
-		return true; //FOR NOW
-	}
-	
 	public void addComment() {
 		
 	}
-	
-	public void setComment() {
-		
-	}
-	
+
 	public void showComments() {
 		
 	}

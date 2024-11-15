@@ -3,6 +3,9 @@ package amazonsystem;
 import java.util.ArrayList;
 import java.util.Date;
 
+//TODO
+//START IMPLEMENTING NEW METHODS 
+
 public class AmazonCart implements AmazonPayable {
 	
 	private AmazonCustomer customer;
@@ -16,34 +19,44 @@ public class AmazonCart implements AmazonPayable {
 		
 	}
 	
-	//TODO ALL METHODS
+	public void addItem(AmazonProduct product, int quantity) throws AmazonException {
+        if (product == null) {
+            throw new AmazonException("Cannot add null product to cart");
+        }
+        if (quantity <= 0) {
+            throw new AmazonException("Quantity must be positive");
+        }
+        
+        if (hasItem(product)) {
+            throw new AmazonException("Product already exists in cart");
+        }
+        
+        AmazonCartItem item = new AmazonCartItem(product, quantity);
+        cartItems.add(item);  
+        calcSubTotal();
+    }
 	
 	public float calcSubTotal() {
 		return 0; //FOR NOW
 	}
 	
-	public int getItem(AmazonCartItem cartItem) {
-		return getItem(cartItem);
-	}
-	
 	public boolean hasItem(AmazonProduct product) {
-		return hasItem(product);
+	    if (product == null) return false;
+	    
+	    for (AmazonCartItem item : cartItems) {
+	        if (item.getProduct().getId() == product.getId()) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 	
 	public boolean pay(AmazonCredit amount) {
 		return pay(amount);
 	}
 	
-	public void addItem(AmazonCartItem cartItem) {
-		
-	}
-	
 	public void removeItem(AmazonProduct product) {
 		
-	}
-	
-	public String getCartDetails() {
-		return ""; //FOR NOW
 	}
 	
 	public String toString() {

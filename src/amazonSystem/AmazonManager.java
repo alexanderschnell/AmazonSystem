@@ -3,6 +3,8 @@ package amazonsystem;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//TODO
+//START IMPLEMENTING NEW METHODS 
 
 public class AmazonManager {
 
@@ -29,10 +31,6 @@ public class AmazonManager {
 	private AmazonProductList productList;
 	private ArrayList<AmazonCustomer> customerList;
 	
-	//TODO
-	// METHODS INCOMPLETE ON MANY CLASSES (AMAZONCUSTOMER ARRAYLIST)
-	//START IMPLEMENTING NEW METHODS 
-
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -382,7 +380,6 @@ public class AmazonManager {
 			 System.out.print("Enter the Product ID to include in the wishlist: ");
 		        int productId = Integer.parseInt(input.nextLine());
 
-		        // Find product
 		        AmazonProduct product = productList.findProductById(productId); 
 
 		        if (product == null) {
@@ -428,9 +425,55 @@ public class AmazonManager {
 		}
 	}
 		
-	public void addProductinCart() {
-		
-	}
+	public void addProductinCart() throws AmazonException {
+		if (customerList.isEmpty()) {
+			System.out.println(ANSI_RED + "No products found." + ANSI_RESET);
+			return;
+		}
+		System.out.print("Enter the Customer ID: ");
+		try {
+			int customerId = Integer.parseInt(input.nextLine());
+			
+			
+			AmazonCustomer customer = null;
+			for (AmazonCustomer c : customerList) {
+				if (c.getId() == customerId) {
+					customer = c;
+					break;
+				}
+			}
+			
+			if (customer == null) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;
+			}
+			System.out.print("Enter the Product ID to buy from your cart: ");
+			 int productId = Integer.parseInt(input.nextLine());
+
+		        AmazonProduct product = productList.findProductById(productId); 
+
+		        if (product == null) {
+		            System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
+		            return;  
+		        }
+		        
+		        System.out.print("Enter the number of items to put in cart: ");
+		        int quantity = Integer.parseInt(input.nextLine());
+		        
+		        if (quantity <= 0) {
+		            System.out.println(ANSI_RED + "Quantity must be positive." + ANSI_RESET);
+		            return;
+		        }
+
+		        customer.addItemInCart(product, quantity);
+		        System.out.println(ANSI_PURPLE + "Cart updated: [" + quantity + " of Product #" + productId + 
+		                          " added for Customer #" + customerId + "]" + ANSI_RESET);
+
+		    } catch (NumberFormatException e) {
+		        throw new AmazonException("Invalid input format.");
+		    }
+		}
+	
 	
 	public void removeProductFromCart() {
 		
