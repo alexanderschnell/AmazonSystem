@@ -49,7 +49,7 @@ public class AmazonProductList {
 				}
 				if (fields.length == NUMCOLS) {
 					try {
-						AmazonProduct product = new AmazonProduct(
+						AmazonProduct product = AmazonProduct.createAmazonProduct(
 								Integer.parseInt(fields[0]),
 								fields[1],
 								new AmazonProductCategory(fields[2]),

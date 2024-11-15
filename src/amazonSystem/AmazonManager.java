@@ -226,58 +226,63 @@ public class AmazonManager {
 	}
 	
 	public void addCreditToCustomer() throws AmazonException {
-	    if (customerList.isEmpty()) {
-	        System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
-	        return;
-	    }
+		if (customerList.isEmpty()) {
+			System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
+			return;
+		}
 
-	    System.out.print("Enter the Customer ID: ");
-	    try {
-	        int id = Integer.parseInt(input.nextLine());
-	        
-	        for (AmazonCustomer customer : customerList) {
-	            if (customer.getId() == id) {
-	                System.out.print("Enter the Type of credit ([1]: Cash, [2]: Check, [3]: Card): ");
-	                int choice = Integer.parseInt(input.nextLine());
-	               
-	                switch(choice) {
-	                    case 1:
-	                        System.out.print("Enter Cash value: ");
-	                        String amount = input.nextLine();
-	                        String[] cashInfo = {amount};
-	                        AmazonCash cash = AmazonCash.createCash(cashInfo);
-	                        customer.addCredit(cash);
-	                        System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
-	                        return;
-	                    case 2:
-	                        System.out.print("Enter Check value: ");
-	                        String checkAmount = input.nextLine();
-	                        String[] checkInfo = {checkAmount};
-	                        AmazonCheck check = AmazonCheck.createCheck(checkInfo);
-	                        customer.addCredit(check);
-	                        System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
-	                        return;
-	                    case 3:
-	                        System.out.print("Enter Card value: ");
-	                        String cardAmount = input.nextLine();
-	                        String[] cardInfo = {cardAmount};
-	                        AmazonCard card = AmazonCard.createCard(cardInfo);
-	                        customer.addCredit(card);
-	                        System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
-	                        return;
-	                    default:
-	                        throw new AmazonException(ANSI_RED + "Invalid credit type selected" + ANSI_RESET);
+		System.out.print("Enter the Customer ID: ");
+		try {
+			int id = Integer.parseInt(input.nextLine());
 
-	                }
-	            }
-	        }
-	        System.out.println(ANSI_RED + "Customer with ID " + id + " not found." + ANSI_RESET);
-	        
-	    } catch (NumberFormatException e) {
-	        throw new AmazonException("Invalid input format");
-	    }
+			for (AmazonCustomer customer : customerList) {
+				if (customer.getId() == id) {
+					System.out.print("Enter the Type of credit ([1]: Cash, [2]: Check, [3]: Card): ");
+					int choice = Integer.parseInt(input.nextLine());
+
+					switch(choice) {
+					case 1:
+						System.out.print("Enter Cash value: ");
+						String amount = input.nextLine();
+						String[] cashInfo = {amount};
+						AmazonCash cash = AmazonCash.createCash(cashInfo);
+						customer.addCredit(cash);
+						System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+						break;
+					case 2:
+						System.out.print("Enter Check value: ");
+						String checkAmount = input.nextLine();
+						System.out.print("Enter Account Number: ");
+						String accountNumber = input.nextLine();
+						String[] checkInfo = {checkAmount, accountNumber};
+						AmazonCheck check = AmazonCheck.createCheck(checkInfo);
+						customer.addCredit(check);
+						System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+						break;
+					case 3:
+						System.out.print("Enter Card value: ");
+						String cardAmount = input.nextLine();
+						System.out.print("Enter Card Number: ");
+						String cardNumber = input.nextLine();
+						System.out.print("Enter Expiration Date: ");
+						String expiration = input.nextLine();
+						String[] cardInfo = {cardAmount, cardNumber, expiration};
+						AmazonCard card = AmazonCard.createCard(cardInfo);
+						customer.addCredit(card);
+						System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+						break;
+					default:
+						throw new AmazonException(ANSI_RED + "Invalid credit type selected" + ANSI_RESET);
+
+					}
+				}
+			}
+
+		} catch (NumberFormatException e) {
+			throw new AmazonException("Invalid input format");
+		}
 	}
-		
+
 	public void showCreditFromCustomer() {
 
 		System.out.print("Enter the customer ID: ");

@@ -71,7 +71,6 @@ public class AmazonCustomer {
 		
 	}
 		
-	
 	public void addProductsInWishList(){
 		
 		

@@ -13,7 +13,7 @@ public class AmazonProduct {
 	private float discountPrice; 
 	private float actualPrice; 
 	
-	public AmazonProduct(int id, String name, AmazonProductCategory category, 
+	private AmazonProduct(int id, String name, AmazonProductCategory category, 
 			AmazonProductSubCategory subCategory, String imageURL, 
 			String link, float rating, int nRatings, 
 			float discountPrice, float actualPrice) {
@@ -28,7 +28,38 @@ public class AmazonProduct {
 		this.discountPrice = discountPrice;
 		this.actualPrice = actualPrice;
 	}
+	
+    public static AmazonProduct createAmazonProduct(int id, String name, AmazonProductCategory category,
+            AmazonProductSubCategory subCategory, String imageURL,
+            String link, float rating, int nRatings,
+            float discountPrice, float actualPrice) {
+        return new AmazonProduct(id, name, category, subCategory, imageURL,
+                link, rating, nRatings, discountPrice, actualPrice);
+    }
 
+	public String toString() {
+		
+		String str = 
+		"[" 
+		+ id + ", "
+		+ name + ", "
+		+ category.getCategory() + ", "
+		+ subCategory.getSubCategory() + ", "
+		+ imageURL + ", "
+		+ link + ", "
+		+ rating + ", "
+		+ nRatings + ", "
+		+ discountPrice + ", "
+		+ actualPrice +
+		"]"
+		;
+		
+		return str;
+			
+	}
+	
+	// GETTERS & SETTERS
+	
 	public float getActual_price() {
 		return actualPrice;
 	}
@@ -109,24 +140,4 @@ public class AmazonProduct {
 		this.imageURL = imageURL;
 	}
 
-	public String toString() {
-		
-		String str = 
-		"[" 
-		+ id + ", "
-		+ name + ", "
-		+ category.getCategory() + ", "
-		+ subCategory.getSubCategory() + ", "
-		+ imageURL + ", "
-		+ link + ", "
-		+ rating + ", "
-		+ nRatings + ", "
-		+ discountPrice + ", "
-		+ actualPrice +
-		"]"
-		;
-		
-		return str;
-			
-	}
 }
