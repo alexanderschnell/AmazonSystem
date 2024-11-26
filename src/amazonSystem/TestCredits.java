@@ -1,4 +1,4 @@
-package CST8132A2.amazonsystem;
+package amazonsystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 

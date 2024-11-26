@@ -6,19 +6,16 @@ public class AmazonCash extends AmazonCredit {
         setType(PaymentType.CASH);
     }
 
-    public static AmazonCash createCash(String[] cashInfo) throws AmazonException {
-        if (cashInfo == null || cashInfo.length != 1) {
-            throw new AmazonException("Invalid cash input format");
+    public static AmazonCash createCash(String[] data) {
+        if (data == null || data.length != 1 || data[0] == null || data[0].trim().isEmpty()) {
+            return null;
         }
 
         try {
-            float amount = Float.parseFloat(cashInfo[0]);
-            if (amount <= 0) {
-                throw new AmazonException("Amount must be positive");
-            }
+            float amount = Float.parseFloat(data[0]);
             return new AmazonCash(amount);
         } catch (NumberFormatException e) {
-            throw new AmazonException("Invalid amount format");
+            return null;
         }
     }
 }

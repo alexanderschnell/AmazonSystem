@@ -100,7 +100,7 @@ public class AmazonManager {
 					showWishList();
 					break;
 				case "K":
-					addProductinCart();
+					addItemInCart();
 					break;	
 				case "L":
 					removeProductFromCart();
@@ -419,7 +419,7 @@ public class AmazonManager {
 		}
 	}
 
-	public void addProductinCart() throws AmazonException {
+	public void addItemInCart() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 			return;
@@ -457,8 +457,10 @@ public class AmazonManager {
 				System.out.println(ANSI_RED + "Quantity must be positive." + ANSI_RESET);
 				return;
 			}
-
-			customer.addItemInCart(product, quantity);
+			
+			AmazonCartItem cartItem = new AmazonCartItem(product, quantity);
+			customer.addItemInCart(cartItem);
+			
 			System.out.println(ANSI_PURPLE + "Cart updated: [" + quantity + " item(s) of Product #" + productId + 
 					" added for Customer #" + customerId + "]" + ANSI_RESET);
 
@@ -621,8 +623,9 @@ public class AmazonManager {
 		 if (rating < 1.0 || rating > 5.0) {
 	            throw new AmazonException(ANSI_RED + "Rating must be between 1.0 and 5.0" + ANSI_RESET);
 	        }
-
-	        customer.addComment(product, comment, rating);
+		 	
+		 	AmazonComment commentText = new AmazonComment(product, comment, rating);
+	        customer.addComment(commentText);
 	}
 	
 	public void showComments() {

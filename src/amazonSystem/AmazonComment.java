@@ -13,6 +13,10 @@ public class AmazonComment {
 		this.setRating(rating);
 	}
 	
+	public AmazonComment(AmazonProduct product) {
+		this.setProduct(product);
+	}
+	
 	public String toString() {
 		return "Product ID: " + product + ", Comment - [" + comment + "], Rating - [" + rating + "]";
 	}

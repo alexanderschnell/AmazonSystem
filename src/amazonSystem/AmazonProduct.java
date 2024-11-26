@@ -39,11 +39,19 @@ public static AmazonProduct createAmazonProduct(int id, String name, AmazonProdu
 }
 
 public static AmazonProduct createAmazonProduct(String[] data) {
+    // Check array validity
     if (data == null || data.length != 10) {
         return null;
     }
 
     try {
+        // Check that none of the String fields are null or empty
+        for (String field : data) {
+            if (field == null || field.trim().isEmpty()) {
+                return null;
+            }
+        }
+
         int id = Integer.parseInt(data[0]);
         String name = data[1];
         AmazonProductCategory category = new AmazonProductCategory(data[2]);

@@ -117,21 +117,22 @@ public class AmazonCustomer {
 			}	
 	}
 
-	public void addItemInCart(AmazonProduct product, int quantity) throws AmazonException {
-		if (cart == null) {
-			cart = new AmazonCart(this, new Date());
-		}
-
-		if (product == null) {
-			throw new AmazonException("Cannot add null product to cart");
-		}
-		if (quantity <= 0) {
-			throw new AmazonException("Quantity must be positive");
-		}
-
-		cart.addItem(product, quantity);
+	public void addItemInCart(AmazonCartItem item) {
+	    if (cart == null) {
+	        cart = new AmazonCart(this, new Date());
+	    }
+	    
+	    if (item == null) {
+	        return;
+	    }
+	    
+	    try {
+	        cart.addItemInCart(item.getProduct(), item.getQuantity());
+	    } catch (AmazonException e) {
+	        return;
+	    }
 	}
-
+	
 	public void removeProductFromCart(AmazonProduct product, int quantity) throws AmazonException {
 		if (cart == null) {
 			System.out.print("The cart is empty.");
@@ -162,30 +163,27 @@ public class AmazonCustomer {
 	}
 
 	public void pay() throws AmazonException {
-		if (cart == null || cart.getCartItems().isEmpty()) {
-			throw new AmazonException("Cart is empty.");
-		}
+	    if (cart == null || cart.getCartItems().isEmpty()) {
+	        return;  // Instead of throwing exception
+	    }
 
-		float totalAmount = cart.calcSubTotal();
-		AmazonCredit latestCredit = getCredits();
+	    float totalAmount = cart.calcSubTotal();
+	    AmazonCredit latestCredit = getCredits();
 
-		if (latestCredit == null || latestCredit.getAmount() < totalAmount) {
-			throw new AmazonException("Insufficient credit amount.");
-		}
+	    if (latestCredit == null || latestCredit.getAmount() < totalAmount) {
+	        return;  // Instead of throwing exception
+	    }
 
-		latestCredit.deduct(totalAmount);
+	    latestCredit.deduct(totalAmount);
 	}
 
-	public void addComment(AmazonProduct product, String comment, float rating) throws AmazonException {
-	    if (product == null) {
-	        throw new AmazonException("Cannot comment on null product");
+	public void addComment(AmazonComment comment) {
+	    if (comment == null || comment.getProduct() == null || 
+	        comment.getComment() == null || comment.getComment().trim().isEmpty()) {
+	        return; 
 	    }
-	    if (comment == null || comment.trim().isEmpty()) {
-	        throw new AmazonException("Comment cannot be empty");
-	    }
-	    
-	    AmazonComment newComment = new AmazonComment(product, comment, rating);
-	    comments.add(newComment);
+
+	    comments.add(comment);
 	    System.out.println(ANSI_PURPLE + "Comment from customer: Customer - [Id: " + 
 	                      this.id + "], [Name - " + this.name + "] ..." + ANSI_RESET);
 	}
@@ -248,5 +246,20 @@ public class AmazonCustomer {
 	public int getWishlistSize() {
 		return wishlist.size();
 	}	
+	
+	public int getCartSize() {
+	    if (cart == null) {
+	        return 0;
+	    }
+	    return cart.getCartItems().size();
+	}
+	
+	public int getNumberOfComments() {
+	    return comments.size();
+	}
+	
+	public int getNumberOfCredits() {
+	    return credits.size();
+	}
 }
 

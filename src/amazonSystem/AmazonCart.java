@@ -26,7 +26,7 @@ public class AmazonCart implements AmazonPayable {
 		
 	}
 	
-	public void addItem(AmazonProduct product, int quantity) throws AmazonException {
+	public void addItemInCart(AmazonProduct product, int quantity) throws AmazonException {
         if (product == null) {
             throw new AmazonException("Cannot add null product to cart");
         }
@@ -150,7 +150,5 @@ public class AmazonCart implements AmazonPayable {
 
 	public void setOrderValue(float orderValue) {
 		this.orderValue = orderValue;
-	}
-	
-	
+	}	
 }

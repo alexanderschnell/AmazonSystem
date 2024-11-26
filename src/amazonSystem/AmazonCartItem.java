@@ -34,5 +34,4 @@ public class AmazonCartItem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-
 }
