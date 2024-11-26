@@ -125,9 +125,11 @@ public class AmazonManager {
 			}		
 		} while (!choice.equalsIgnoreCase("Q"));
 	}
-
+	
 	// New menu (Could change to assignment format) 
 	public void showMenu() {
+		
+		System.out.println();
 		System.out.println(ANSI_BLACK + "=============================================================\r\n"
 				+  "||"  + CYAN_BOLD  +    " ~~~~~~~~~~~~~~~~~~~~ AMAZON SYSTEM ~~~~~~~~~~~~~~~~~~~~ " + ANSI_RESET +  "||\r\n"  
 				+ "=============================================================\n");

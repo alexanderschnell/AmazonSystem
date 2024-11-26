@@ -36,10 +36,10 @@ public class AmazonProductUtil {
 				field = field.substring(1, field.length() - 1);
 			}
 
-			if (field.startsWith("₹")) {
-				field = field.substring(1).replace(",", "");
+			   if ((i == 8 || i == 9) && (field.contains("₹") || field.contains("â") || field.contains("?"))) {
+		            field = field.replaceAll("[^0-9.]", "");
 			}
-
+			
 			fields.set(i, field);
 		}
 
