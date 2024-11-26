@@ -6,6 +6,7 @@ public abstract class AmazonCredit {
 
 	private float amount;
 	private PaymentType type;
+	
 
 	public AmazonCredit(float amount) {
 		this.amount = amount;
@@ -32,7 +33,7 @@ public abstract class AmazonCredit {
 	}
 
 	public String toString() {
-		return "Credit: Payment Type - [" + type + "], " + "Credit Amount - [" + amount + "]";
+		return "Credit Type: [" + type + "], " + "Credit Amount - [" + amount + "]";
 	}
 
 

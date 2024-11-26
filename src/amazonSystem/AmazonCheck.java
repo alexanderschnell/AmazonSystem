@@ -4,6 +4,7 @@ public class AmazonCheck extends AmazonCredit {
 	
 	private String accountNumber;
 	
+	
     private AmazonCheck(float amount) {
         super(amount);
         setType(PaymentType.CHECK);
@@ -12,8 +13,8 @@ public class AmazonCheck extends AmazonCredit {
     @Override
     public String toString() {
         return "Credit Type: [" + getType() + 
-               "], Account: [" + accountNumber + 
-               "], Value: [" + getAmount() + "]";
+               "], Account - [" + accountNumber + 
+               "], Value - [" + getAmount() + "]";
     }
 
     public static AmazonCheck createCheck(String[] checkInfo) throws AmazonException {

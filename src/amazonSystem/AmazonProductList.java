@@ -9,41 +9,37 @@ import java.util.ArrayList;
 import java.util.Arrays; 
 
 public class AmazonProductList {
-
-	public AmazonProductList() {
-		DEFAULT_TITLE.addAll(Arrays.asList("id", "name", "main_category", "sub_category", "image", "link", 
-				"ratings", "no_of_ratings", "discount_price", "actual_price"));
-	}
-
-	public static final int NUMCOLS = 10;
-
-	private final ArrayList<AmazonProduct> bestsellers = new ArrayList<AmazonProduct>();
-
-	public final ArrayList<String> DEFAULT_TITLE = new ArrayList<String>(); 
-
+	
+	public static final int NUMCOLS = 10;	
+	public final ArrayList<String> COLUMN_HEADERS = new ArrayList<String>(); 
+	private final ArrayList<AmazonProduct> productList = new ArrayList<AmazonProduct>();
+	
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
 	public static final String ANSI_RESET = "\u001B[0m";
+	
 
-
+	public AmazonProductList() {
+		COLUMN_HEADERS.addAll(Arrays.asList("id", "name", "main_category", "sub_category", "image", "link", 
+				"ratings", "no_of_ratings", "discount_price", "actual_price"));
+	}
 
 	public void add(AmazonProduct product) {
 		if (product != null) {
-			bestsellers.add(product);
-
+			productList.add(product);
 		}
 	}
 
 	public void createList(String fileName) throws AmazonException {
-		bestsellers.clear(); 
+		productList.clear(); 
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			String line;
 			boolean isFirstLine = true;
 			while ((line = br.readLine()) != null) {
 				String[] fields = AmazonProductUtil.lineReader(line);
 				if (isFirstLine) {
-					DEFAULT_TITLE.clear();
-					DEFAULT_TITLE.addAll(Arrays.asList(fields));
+					COLUMN_HEADERS.clear();
+					COLUMN_HEADERS.addAll(Arrays.asList(fields));
 					isFirstLine = false;
 					continue;
 				}
@@ -62,26 +58,23 @@ public class AmazonProductList {
 								Float.parseFloat(fields[9])
 								);
 
-						bestsellers.add(product);
+						productList.add(product);
 
 					} catch (NumberFormatException e) {
 						System.err.println(ANSI_RED + "Error parsing line: " + line + ANSI_RESET);
 						System.err.println(ANSI_RED + "Error details: " + e.getMessage() + ANSI_RESET);
-
 					}		
 				}				
 			}
-
 		} catch (IOException e) {
 			throw new AmazonException(ANSI_RED + "Error reading file: " + fileName + ANSI_RESET);
-
 		}
 	}	
 	
 	public boolean delete(int id) {
-		for (int i = 0; i < bestsellers.size(); i++) {
-			if (bestsellers.get(i).getId() == id) {
-				bestsellers.remove(i);
+		for (int i = 0; i < productList.size(); i++) {
+			if (productList.get(i).getId() == id) {
+				productList.remove(i);
 				return true;
 			}
 		}
@@ -89,9 +82,9 @@ public class AmazonProductList {
 	}
 
 	public boolean edit(int id, AmazonProduct updatedProduct) {
-		for (int i = 0; i < bestsellers.size(); i++) {
-			if (bestsellers.get(i).getId() == id) {
-				bestsellers.set(i, updatedProduct);
+		for (int i = 0; i < productList.size(); i++) {
+			if (productList.get(i).getId() == id) {
+				productList.set(i, updatedProduct);
 				return true;
 			}
 		}
@@ -99,14 +92,14 @@ public class AmazonProductList {
 	}
 
 	public AmazonProduct findProductByIndex(int index) {
-		if (index >= 0 && index < bestsellers.size()) {
-			return bestsellers.get(index);
+		if (index >= 0 && index < productList.size()) {
+			return productList.get(index);
 		}
 		return null;
 	}
 
 	public AmazonProduct findProductById(int id) {
-		for (AmazonProduct product : bestsellers) {
+		for (AmazonProduct product : productList) {
 			if (product.getId() == id) {
 				return product;
 			}
@@ -114,18 +107,14 @@ public class AmazonProductList {
 		return null;
 	}
 
-	public int getSize() {
-		return bestsellers.size();
-	}
-
 	public void printList() {
-		for (AmazonProduct product : bestsellers) {
+		for (AmazonProduct product : productList) {
 			System.out.println(product.toString());
 		}
 	}
 
 	public void search(String keyword) {
-		for (AmazonProduct product : bestsellers) {
+		for (AmazonProduct product : productList) {
 			if (product.getName().toLowerCase().contains(keyword.toLowerCase())) {
 				System.out.println(ANSI_PURPLE + product + ANSI_RESET);
 			}
@@ -135,10 +124,10 @@ public class AmazonProductList {
 	public void saveList(String fileName) throws AmazonException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
 
-			bw.write(String.join(",", DEFAULT_TITLE));
+			bw.write(String.join(",", COLUMN_HEADERS));
 			bw.newLine();
 
-			for (AmazonProduct product : bestsellers) {
+			for (AmazonProduct product : productList) {
 				String[] fields = {
 						String.valueOf(product.getId()),
 						escapeField(product.getName()),
@@ -155,7 +144,7 @@ public class AmazonProductList {
 				bw.newLine();
 				System.out.println(ANSI_PURPLE + "Saved product: " + String.join(", ", fields) + ANSI_RESET);
 			}
-			System.out.println(ANSI_PURPLE + "Finished saving " + bestsellers.size() + " products." + ANSI_RESET);
+			System.out.println(ANSI_PURPLE + "Finished saving " + productList.size() + " products." + ANSI_RESET);
 		} catch (IOException e) {
 			throw new AmazonException(ANSI_RED + "Error writing to file: " + e.getMessage() + ANSI_RESET);
 		}
@@ -171,8 +160,12 @@ public class AmazonProductList {
 		return field;
 	}	
 	
-	public ArrayList<AmazonProduct> getBestsellers() {
-	    return bestsellers;
+	public ArrayList<AmazonProduct> getProductList() {
+	    return productList;
+	}
+	
+	public int getSize() {
+		return productList.size();
 	}
 }
 

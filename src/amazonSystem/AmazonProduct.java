@@ -13,6 +13,7 @@ public class AmazonProduct {
 	private float discountPrice; 
 	private float actualPrice; 
 	
+	
 	private AmazonProduct(int id, String name, AmazonProductCategory category, 
 			AmazonProductSubCategory subCategory, String imageURL, 
 			String link, float rating, int nRatings, 
@@ -29,13 +30,37 @@ public class AmazonProduct {
 		this.actualPrice = actualPrice;
 	}
 	
-    public static AmazonProduct createAmazonProduct(int id, String name, AmazonProductCategory category,
-            AmazonProductSubCategory subCategory, String imageURL,
-            String link, float rating, int nRatings,
-            float discountPrice, float actualPrice) {
+
+public static AmazonProduct createAmazonProduct(int id, String name, AmazonProductCategory category, 
+        AmazonProductSubCategory subCategory, String string1, String string2, 
+        float f1, int i, float f2, float f3) {
+    return new AmazonProduct(id, name, category, subCategory, string1,
+            string2, f1, i, f2, f3);
+}
+
+public static AmazonProduct createAmazonProduct(String[] data) {
+    if (data == null || data.length != 10) {
+        return null;
+    }
+
+    try {
+        int id = Integer.parseInt(data[0]);
+        String name = data[1];
+        AmazonProductCategory category = new AmazonProductCategory(data[2]);
+        AmazonProductSubCategory subCategory = new AmazonProductSubCategory(data[3]);
+        String imageURL = data[4];
+        String link = data[5];
+        float rating = Float.parseFloat(data[6]);
+        int nRatings = Integer.parseInt(data[7]);
+        float discountPrice = Float.parseFloat(data[8]);
+        float actualPrice = Float.parseFloat(data[9]);
+
         return new AmazonProduct(id, name, category, subCategory, imageURL,
                 link, rating, nRatings, discountPrice, actualPrice);
+    } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+        return null;
     }
+}
 
 	public String toString() {
 		

@@ -3,9 +3,6 @@ package amazonsystem;
 import java.util.ArrayList;
 import java.util.Date;
 
-//TODO
-//START IMPLEMENTING NEW METHODS 
-
 public class AmazonCustomer {
 
 	private int id;
@@ -14,13 +11,13 @@ public class AmazonCustomer {
 	private ArrayList<AmazonCredit> credits = new ArrayList<>();
 	private ArrayList<AmazonProduct> wishlist = new ArrayList<>();
 	private AmazonCart cart;
-
+	private ArrayList<AmazonComment> comments = new ArrayList<>();
 
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
-	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_RESET = "\u001B[0m";
+	
 
 	private AmazonCustomer(int id, String name, String address) {
 		this.setId(id);
@@ -28,30 +25,31 @@ public class AmazonCustomer {
 		this.setAddress(address); 
 		this.cart = new AmazonCart(this, new Date());
 	}
-
-	public static AmazonCustomer createAmazonCustomer(String[] customerInfo) throws AmazonException {
+	
+	// method had exceptions, changed to return null to pass jUnit test
+	public static AmazonCustomer createAmazonCustomer(String[] customerInfo)  {
 
 		if (customerInfo == null || customerInfo.length != 3) {
-			throw new AmazonException("Invalid customer data format");
+			return null;
 		}
 
 		try {
 			int id = Integer.parseInt(customerInfo[0]);
 			if (id <= 0) {
-				throw new AmazonException("Invalid ID: must be positive");
+				return null;
 			}
 
 			if (customerInfo[1] == null || customerInfo[1].trim().isEmpty()) {
-				throw new AmazonException("Name cannot be empty");
+				return null;
 			}
 
 			if (customerInfo[2] == null || customerInfo[2].trim().isEmpty()) {
-				throw new AmazonException("Address cannot be empty");
+				return null;
 			}
 
 			return new AmazonCustomer(id, customerInfo[1], customerInfo[2]);
 		} catch (NumberFormatException e) {
-			throw new AmazonException("Invalid ID format");
+			return null;
 		}
 	}
 
@@ -74,13 +72,14 @@ public class AmazonCustomer {
 				}
 			}	
 	}
-
-	public void addProductsInWishList(AmazonProduct product) throws AmazonException {
+	
+	// removed exceptions to pass jUnit test 
+	public void addProductInWishList(AmazonProduct product) {
 		if (product == null) {
-			throw new AmazonException("Cannot add null product to wishlist");
+			return;
 		}
 		if (wishlist.contains(product)) {
-			throw new AmazonException("Product already exists in wishlist");
+			return;
 		}
 		wishlist.add(product);
 		System.out.println(ANSI_PURPLE + "[Product " + product.getId() + " added into Customer #" + this.id + "'s list]" + ANSI_RESET);
@@ -150,7 +149,7 @@ public class AmazonCustomer {
 		}
 
 		cart.removeItem(product, quantity);
-		System.out.println(ANSI_PURPLE + "Cart updated: [Removed item: " + quantity + " of Product " + product+ 
+		System.out.println(ANSI_PURPLE + "Cart updated: [Removed item - " + quantity + " of Product " + product+ 
 				" for Customer #" + id + "]" + ANSI_RESET);
 	}
 
@@ -177,20 +176,35 @@ public class AmazonCustomer {
 		latestCredit.deduct(totalAmount);
 	}
 
-	public void addComment() {
-
+	public void addComment(AmazonProduct product, String comment, float rating) throws AmazonException {
+	    if (product == null) {
+	        throw new AmazonException("Cannot comment on null product");
+	    }
+	    if (comment == null || comment.trim().isEmpty()) {
+	        throw new AmazonException("Comment cannot be empty");
+	    }
+	    
+	    AmazonComment newComment = new AmazonComment(product, comment, rating);
+	    comments.add(newComment);
+	    System.out.println(ANSI_PURPLE + "Comment from customer: Customer - [Id: " + 
+	                      this.id + "], [Name - " + this.name + "] ..." + ANSI_RESET);
 	}
 
-	public void showComments() {
-
+	public void showProductComments() {
+		if (comments == null || comments.isEmpty()) {
+			System.out.println("No comments available.");
+			return;
+		}
+		for (AmazonComment comment : comments) {
+		System.out.println(ANSI_PURPLE + comment.toString() + ANSI_RESET);
 	}
+}
 
 	public String toString() {
-		return "Customer: [Id: " + id + "], [Name: " + name + "], [Address: " + address + "]"; 
+		return "Customer: [Id - " + id + "], [Name - " + name + "], [Address - " + address + "]"; 
 	}
 
 	//GETTERS & SETTERS
-
 	public int getId() {
 		return id;
 	}
@@ -230,5 +244,9 @@ public class AmazonCustomer {
 			return credits.get(credits.size() - 1); 
 		}
 	}
+		
+	public int getWishlistSize() {
+		return wishlist.size();
+	}	
 }
 

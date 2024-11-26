@@ -10,6 +10,16 @@ public class AmazonCart implements AmazonPayable {
 	private ArrayList<AmazonCartItem> cartItems = new ArrayList<AmazonCartItem>();
 	private float orderValue;
 	
+	//ANSI color codes
+	public static final String ANSI_BLACK = "\u001B[30m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String BLUE_BOLD = "\u001B[1;34m";
+	public static final String BLACK_BOLD = "\u001B[1;30m";
+	public static final String CYAN_BOLD = "\u001B[1;36m";
+	public static final String ANSI_RESET = "\u001B[0m";
+	
+	
 	public AmazonCart(AmazonCustomer customer, Date date) {
 		this.setCustomer(customer);
 		this.setDate(date);
@@ -96,12 +106,12 @@ public class AmazonCart implements AmazonPayable {
 	
 	public String toString() {
 	    String result = "";
-	    int i = 1;
-	    result += "[Customer: " + customer.getName() + "]\n";
-	    result += "[Date: " + date + "]\n";
+	    int i = 0;
+	    result += "Customer: [" + customer.getName() + "]\n";
+	    result += "Date: [" + date + "]\n";
 	    for (AmazonCartItem item : cartItems) {
 	        if (item != null) {
-	            result += "Item[" + i + "]" + item.toString() + "\n";
+	            result += "Product: " + i + item.toString() + "\n";
 	            i++;
 	        }
 	    }
@@ -109,8 +119,7 @@ public class AmazonCart implements AmazonPayable {
 	    return result;
 	}
 		
-	//GETTERS & SETTERS
-	
+	// GETTERS & SETTERS
 	public Date getDate() {
 		return date;
 	}

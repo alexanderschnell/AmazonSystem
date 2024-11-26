@@ -3,11 +3,8 @@ package amazonsystem;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//TODO
-//START IMPLEMENTING NEW METHODS 
-
 public class AmazonManager {
-
+	
 	public String fileName;
 
 	public final String OPTION0_EXIT = "[Q]";
@@ -25,16 +22,23 @@ public class AmazonManager {
 	public final String OPTION12_REMOVE_FROM_CART = "[L]";
 	public final String OPTION13_SHOW_FROM_CART = "[M]";
 	public final String OPTION14_BUY_FROM_CART = "[N]";
+	public final String OPTION15_COMMENT_ON_PRODUCT = "[O]";
+	public final String OPTION16_LIST_COMMENTS = "[P]";
 
 	public static Scanner input = new Scanner(System.in);
 
 	private AmazonProductList productList;
 	private ArrayList<AmazonCustomer> customerList;
-
+	
+	//ANSI color codes
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
+	public static final String BLUE_BOLD = "\u001B[1;34m";
+	public static final String BLACK_BOLD = "\u001B[1;30m";
+	public static final String CYAN_BOLD = "\u001B[1;36m";
 	public static final String ANSI_RESET = "\u001B[0m";
+	
 
 	public AmazonManager() {
 		productList = new AmazonProductList();
@@ -51,17 +55,16 @@ public class AmazonManager {
 
 		} catch (AmazonException e) {
 			e.printStackTrace();
-		}
+		}																
 	}
 
+	// New menu controller 
 	public void menuController() throws AmazonException {
-
 		String choice;
 		do {
 			showMenu();
 			choice = input.nextLine();
 			try {
-
 				switch (choice.toUpperCase()) {
 				case "Q":
 					exit();
@@ -108,6 +111,12 @@ public class AmazonManager {
 				case "N":
 					payCart();
 					break;	
+				case "O":
+					addCommentToProduct();
+					break;	
+				case "P":
+					showComments();
+					break;	
 				default:
 					System.out.println(ANSI_RED + "Invalid input." + ANSI_RESET);
 				}
@@ -117,48 +126,46 @@ public class AmazonManager {
 		} while (!choice.equalsIgnoreCase("Q"));
 	}
 
+	// New menu (Could change to assignment format) 
 	public void showMenu() {
-		System.out.println(ANSI_BLACK + "================================\r\n"
-				+ "||      Amazon Manager: A2    ||\r\n"
-				+ "================================\n");
+		System.out.println(ANSI_BLACK + "=============================================================\r\n"
+				+  "||"  + CYAN_BOLD  +    " ~~~~~~~~~~~~~~~~~~~~ AMAZON SYSTEM ~~~~~~~~~~~~~~~~~~~~ " + ANSI_RESET +  "||\r\n"  
+				+ "=============================================================\n");
 
-		System.out.println("***ADMIN***\n");
-		System.out.println("Product options....................");
-		System.out.println(OPTION1_LOAD + ". Load product list");
-		System.out.println(OPTION2_SHOW + ". Show product list");
-		System.out.println(OPTION3_SEARCH + ". Search in the list\n");
-		System.out.println("Customer options...................");
-		System.out.println(OPTION4_ADD_CUSTOMER + ". Add customer");
-		System.out.println(OPTION5_SHOW_CUSTOMER + ". Show customer\n");
-		System.out.println("***USER***\n");
-		System.out.println("Credit options.....................");
-		System.out.println(OPTION6_ADD_CREDIT + ". Add credits to customer");
-		System.out.println(OPTION7_SHOW_CREDIT + ". Show customer credits\n");
-		System.out.println("Wishlist Options...................");
-		System.out.println(OPTION8_ADD_TO_WISHLIST + ". Add product in wishlist");
-		System.out.println(OPTION9_REMOVE_FROM_WISHLIST + ". Remove product from wishlst");
-		System.out.println(OPTION10_SHOW_FROM_WISHLIST + ". Show products from wishlist\n");
-		System.out.println("Cart Options.......................");
-		System.out.println(OPTION11_ADD_TO_CART + ". Add products in cart");
-		System.out.println(OPTION12_REMOVE_FROM_CART + ". Remove product from cart");
-		System.out.println(OPTION13_SHOW_FROM_CART + ". Show products from cart");
-		System.out.println(OPTION14_BUY_FROM_CART + ". Buy products from cart\n");
-		System.out.println("...................................");
-		System.out.println(OPTION0_EXIT + ". Exit");
-		System.out.print("\nChoose an option: ");
-		//System.out.println(OPTION3_ADD + ". Add product");
-		//System.out.println(OPTION4_EDT + ". Edit a product");
-		//System.out.println(OPTION5_DEL + ". Delete a product");
-		//System.out.println(OPTION6_SAV + ". Save product list");
-
+		System.out.println(CYAN_BOLD + "***ADMIN***\n" + ANSI_RESET);
+		System.out.println(BLACK_BOLD + "Product options...................." + ANSI_RESET);
+		System.out.println(OPTION1_LOAD + " Load product list");
+		System.out.println(OPTION2_SHOW + " Show product list");
+		System.out.println(OPTION3_SEARCH + " Search in the list\n");
+		System.out.println(BLACK_BOLD + "Customer options..................." + ANSI_RESET);
+		System.out.println(OPTION4_ADD_CUSTOMER + " Add customers");
+		System.out.println(OPTION5_SHOW_CUSTOMER + " Show customers\n");
+		System.out.println(CYAN_BOLD + "***USER***\n" + ANSI_RESET);
+		System.out.println(BLACK_BOLD + "Credit options....................." + ANSI_RESET);
+		System.out.println(OPTION6_ADD_CREDIT + " Add credits to customers");
+		System.out.println(OPTION7_SHOW_CREDIT + " Show customer credits\n");
+		System.out.println(BLACK_BOLD + "Wishlist Options..................." + ANSI_RESET);
+		System.out.println(OPTION8_ADD_TO_WISHLIST + " Add products to wishlist");
+		System.out.println(OPTION9_REMOVE_FROM_WISHLIST + " Remove products from wishlst");
+		System.out.println(OPTION10_SHOW_FROM_WISHLIST + " Show products from wishlist\n");
+		System.out.println(BLACK_BOLD + "Cart Options......................." + ANSI_RESET);
+		System.out.println(OPTION11_ADD_TO_CART + " Add products to cart");
+		System.out.println(OPTION12_REMOVE_FROM_CART + " Remove products from cart");
+		System.out.println(OPTION13_SHOW_FROM_CART + " Show products from cart");
+		System.out.println(OPTION14_BUY_FROM_CART + " Buy products from cart\n");
+		System.out.println(BLACK_BOLD + "Comment Options...................." + ANSI_RESET);
+		System.out.println(OPTION15_COMMENT_ON_PRODUCT + " Comment on purchased products");
+		System.out.println(OPTION16_LIST_COMMENTS + " List comments from products\n");		
+		System.out.println(BLACK_BOLD + "...................................");
+		System.out.println(OPTION0_EXIT + " Exit" + ANSI_RESET);
+		System.out.print(CYAN_BOLD + "\nChoose an option: " + ANSI_RESET);
 	}
 
 	public void exit() {
-		System.out.println("============================================================\r\n"
-				+ "||     [Application ended] (Author: Alexander Schnell)    ||\r\n"
-				+ "============================================================" + ANSI_RESET);
+		System.out.println("=============================================================\r\n"
+				+ "||     " + CYAN_BOLD + "[Application ended]" + ANSI_RESET + BLUE_BOLD + "  [Author: Alexander Schnell]" + ANSI_RESET  + "    ||\r\n"
+				+ "=============================================================" + ANSI_RESET);
 		input.close();
-		System.exit(0);
 	}
 
 	// Taken from A1
@@ -185,10 +192,8 @@ public class AmazonManager {
 		if (productList == null || productList.getSize() == 0) {
 			System.out.println("The product list is empty.");
 			return;
-
 		} else 
-
-			System.out.println(ANSI_PURPLE + "[Productlist ...]");
+			System.out.println(BLACK_BOLD + "[Printing Productlist ...]" + ANSI_RESET);
 
 		for (int i = 0; i < productList.getSize(); i++) {
 			AmazonProduct product = productList.findProductByIndex(i);
@@ -206,7 +211,7 @@ public class AmazonManager {
 		productList.search(keyword);
 	}
 
-	public void addCustomer() throws AmazonException {
+	public void addCustomer() {
 		System.out.print("Enter customer ID: ");
 		String id = input.nextLine();
 		System.out.print("Enter customer name: ");
@@ -215,21 +220,18 @@ public class AmazonManager {
 		String address = input.nextLine();
 
 		String[] customerData = {id, name, address};
-		try {
-			AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
-			customerList.add(newCustomer);
-			System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
-		} catch (AmazonException e) {
-			System.err.println(ANSI_RED + "Error: " + e.getMessage() + ANSI_RESET);
-		}
+		AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
+		
+		customerList.add(newCustomer);
+		
+		System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
 	}
 
 	public void showCustomer() {
 		if (customerList == null || customerList.size() == 0) {
 			System.out.println("The customer list is empty.");
 		} else
-
-			System.out.println("[Printing customer(s) ...]");
+			System.out.println(BLACK_BOLD + "[Printing customer(s) ...]" + ANSI_RESET);
 
 		for (int i = 0; i < customerList.size(); i++) {
 			AmazonCustomer customer = customerList.get(i); 
@@ -238,7 +240,6 @@ public class AmazonManager {
 				System.out.println(ANSI_PURPLE + customer.toString() + ANSI_RESET);
 			}
 		}
-
 	}
 
 	public void addCreditToCustomer() throws AmazonException {
@@ -246,7 +247,6 @@ public class AmazonManager {
 			System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
 			return;
 		}
-
 		System.out.print("Enter the Customer ID: ");
 		try {
 			int id = Integer.parseInt(input.nextLine());
@@ -289,7 +289,6 @@ public class AmazonManager {
 						break;
 					default:
 						throw new AmazonException(ANSI_RED + "Invalid credit type selected" + ANSI_RESET);
-
 					}
 				}
 			}
@@ -306,7 +305,7 @@ public class AmazonManager {
 
 		for (AmazonCustomer customer : customerList) {
 			if (customer.getId() == id) {
-
+				System.out.println(BLACK_BOLD + "[Printing customer(s) credit...]" + ANSI_RESET);
 				customer.showCredits();
 			}
 		}
@@ -317,12 +316,10 @@ public class AmazonManager {
 			System.out.println(ANSI_RED + "No customer found." + ANSI_RESET);
 			return; 
 		}
-
 		System.out.print("Enter the Customer ID: ");
 		try {
 			int customerId = Integer.parseInt(input.nextLine());
 
-			// Find customer
 			AmazonCustomer customer = null;
 			for (AmazonCustomer c : customerList) {
 				if (c.getId() == customerId) {
@@ -339,7 +336,6 @@ public class AmazonManager {
 			System.out.print("Enter the Product ID to include in the wishlist: ");
 			int productId = Integer.parseInt(input.nextLine());
 
-			// Find product
 			AmazonProduct product = productList.findProductById(productId); 
 
 			if (product == null) {
@@ -347,7 +343,7 @@ public class AmazonManager {
 				return;  
 			}
 
-			customer.addProductsInWishList(product);
+			customer.addProductInWishList(product);
 
 		} catch (NumberFormatException e) {
 			throw new AmazonException("Invalid input format.");
@@ -403,7 +399,6 @@ public class AmazonManager {
 		try {
 			int id = Integer.parseInt(input.nextLine());
 
-
 			AmazonCustomer customer = null;
 			for (AmazonCustomer c : customerList) {
 				if (c.getId() == id) {
@@ -417,7 +412,7 @@ public class AmazonManager {
 				return;
 			}
 
-			System.out.println("[Printing wishlist ...]");
+			System.out.println(BLACK_BOLD + "[Printing wishlist ...]" + ANSI_RESET);
 			customer.showWishList();
 		} catch (NumberFormatException e) {
 			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
@@ -538,7 +533,7 @@ public class AmazonManager {
 				return;
 			}
 
-			System.out.println("[Printing cart ...]");
+			System.out.println(BLACK_BOLD + "[Printing cart ...]" + ANSI_RESET);
 			customer.showCart();
 		} catch (NumberFormatException e) {
 			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
@@ -569,31 +564,96 @@ public class AmazonManager {
 	        throw new AmazonException(ANSI_RED + "Cart is empty" + ANSI_RESET);
 	    }
 
-	    System.out.print("Confirm payment by typing 'p': ");
+	    System.out.print("Confirm payment by typing [P]: ");
 	    String choice = input.nextLine();
 
 	    if (!choice.equalsIgnoreCase("p")) {
-	        throw new AmazonException(ANSI_RED + "No credits available" + ANSI_RESET);
+	        throw new AmazonException(ANSI_RED + "No credits available." + ANSI_RESET);
 	    }
 
 	    float totalAmount = customer.getCart().calcSubTotal();
 	    if (customer.getCredits().getAmount() >= totalAmount) {
 	        customer.getCredits().deduct(totalAmount);
 	        customer.getCart().getCartItems().clear();
-	        System.out.println(ANSI_PURPLE + "Customer credit updated: Type: " + "[" + customer.getCredits().getType() +
-	                         "]," + " Credit Amount: " + "[" + customer.getCredits().getAmount() + "]");
+	        System.out.println(ANSI_PURPLE + "Customer credit updated: Type - " + "[" + customer.getCredits().getType() +
+	                         "]," + " Credit Amount - " + "[" + customer.getCredits().getAmount() + "]");
 	        System.out.println("Cart empty - you can comment products now." + ANSI_RESET);
 	    } else {
-	        throw new AmazonException(ANSI_RED + "Insufficient credit amount" + ANSI_RESET);
+	        throw new AmazonException(ANSI_RED + "Insufficient credit amount." + ANSI_RESET);
 	    }
 	}
 
-	public void addCommentToProduct() {
+	public void addCommentToProduct() throws AmazonException {
+		if (customerList.isEmpty()) {
+			throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
+		}
+		
+		System.out.print("Enter the customer ID: ");
+		int id = Integer.parseInt(input.nextLine());
+		
+		AmazonCustomer customer = null;
+		for (AmazonCustomer c : customerList) {
+			if (c.getId() == id) {
+				customer = c;
+				break;
+			}
+		}
+		if ( customer == null) {
+			throw new AmazonException(ANSI_RED + "Customer not found." + ANSI_RESET);
+		}
+		
+		System.out.print("Enter the Product ID for comment: ");
+		int productId = Integer.parseInt(input.nextLine());
 
+		AmazonProduct product = productList.findProductById(productId); 
+
+		if (product == null) {
+			System.out.println(ANSI_RED + "Product not found." + ANSI_RESET);
+			return;  
+		}
+		
+		System.out.println("Commenting product: " + product.toString());
+		System.out.print("Enter the comment: ");
+		String comment = input.nextLine();
+		System.out.print("Enter the star rating: ");
+		float rating = Float.parseFloat(input.nextLine());
+		
+		 if (rating < 1.0 || rating > 5.0) {
+	            throw new AmazonException(ANSI_RED + "Rating must be between 1.0 and 5.0" + ANSI_RESET);
+	        }
+
+	        customer.addComment(product, comment, rating);
 	}
-
+	
 	public void showComments() {
+		if (customerList.isEmpty()) {
+			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
+			return;
+		}
 
+		System.out.print("Enter the Customer ID: ");
+		try {
+			int id = Integer.parseInt(input.nextLine());
+
+
+			AmazonCustomer customer = null;
+			for (AmazonCustomer c : customerList) {
+				if (c.getId() == id) {
+					customer = c;
+					break;
+				}
+			}
+
+			if (customer == null) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;
+			}
+
+			customer.showProductComments();
+			
+		} catch (NumberFormatException e) {
+			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
+		}
 	}
 }
 
