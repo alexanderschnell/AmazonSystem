@@ -211,24 +211,31 @@ public class AmazonManager {
 		System.out.print("Enter a keyword to find: ");
 		String keyword = input.nextLine();
 		productList.search(keyword);
+		if (!AmazonSystemUtil.isValidString(keyword)) {
+			throw new AmazonException(ANSI_RED + "Search keyword cannot be empty." + ANSI_RESET);
+		}
 	}
 
 	public void addCustomer() {
-		System.out.print("Enter customer ID: ");
-		String id = input.nextLine();
-		System.out.print("Enter customer name: ");
-		String name = input.nextLine();
-		System.out.print("Enter customer address: ");
-		String address = input.nextLine();
+	    System.out.print("Enter customer ID: ");
+	    String id = input.nextLine();
+	    System.out.print("Enter customer name: ");
+	    String name = input.nextLine();
+	    System.out.print("Enter customer address: ");
+	    String address = input.nextLine();
 
-		String[] customerData = {id, name, address};
-		AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
-		
-		customerList.add(newCustomer);
-		
-		System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
+	    String[] customerData = {id, name, address};
+	    AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
+	    
+	    if (newCustomer == null) {
+	        System.out.println(ANSI_RED + "Failed to create customer due to invalid input." + ANSI_RESET);
+	        return;
+	    }
+	    
+	    customerList.add(newCustomer);
+	    System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
 	}
-
+	
 	public void showCustomer() {
 		if (customerList == null || customerList.size() == 0) {
 			System.out.println("The customer list is empty.");
@@ -662,127 +669,6 @@ public class AmazonManager {
 	}
 }
 
-/*
-	public void addProduct() throws AmazonProductException {
-		if (productList == null) {
-			throw new AmazonProductException("Product list has not been created. Please load a product first.");
-		}
-
-		int newID = productList.getSize();
-		AmazonProduct newProduct = null;
-
-		while (newProduct == null) {
-			try {
-				newProduct = createProduct(newID);
-			} catch (NumberFormatException e) {
-				System.out.println(ANSI_RED + "Invalid input. Please try again." + ANSI_RESET);
-			}
-		}
-
-		productList.add(newProduct);
-		System.out.println(ANSI_PURPLE + "Product added successfully! New list size: " + productList.getSize() + ANSI_RESET);
-	}
-	public AmazonProduct createProduct(int id) throws AmazonProductException {
-		System.out.print("Enter product name: ");
-		String name = input.nextLine();
-		System.out.print("Enter product category: ");
-		String category = input.nextLine();
-		System.out.print("Enter product subcategory: ");
-		String subcategory = input.nextLine();
-		System.out.print("Enter image URL: ");
-		String imageURL = input.nextLine();
-		System.out.print("Enter product link: ");
-		String link = input.nextLine();
-		System.out.print("Enter rating: ");
-		float rating = AmazonProductUtil.convertStrToFloat(input.nextLine());
-		System.out.print("Enter number of ratings: ");
-		int nRatings = Integer.parseInt(input.nextLine());
-		System.out.print("Enter discount price: ");
-		float discountPrice = AmazonProductUtil.convertStrToFloat(input.nextLine());
-		System.out.print("Enter actual price: ");
-		float actualPrice = AmazonProductUtil.convertStrToFloat(input.nextLine());
-
-		return new AmazonProduct(id, name, new AmazonProductCategory(category),
-				new AmazonProductSubCategory(subcategory), imageURL, link, rating, nRatings,
-				discountPrice, actualPrice);
-	}
-
-
-
-	public void deleteProduct() throws AmazonProductException {
-		while (true) {
-			System.out.print("Enter the ID of the product to delete: ");
-			try {
-				int id = Integer.parseInt(input.nextLine());
-				AmazonProduct existingProduct = productList.findProductById(id);
-
-				if (existingProduct == null) {
-					System.out.println(ANSI_RED + "Product with ID " + id + " not found. Please try again." + ANSI_RESET);
-					continue;  
-				}
-
-				boolean deleted = productList.delete(id);
-
-				if (deleted) {
-					System.out.println(ANSI_PURPLE + "Product successfully deleted!" + ANSI_RESET);
-
-				} else {
-					System.out.println(ANSI_RED + "Failed to delete product." + ANSI_RESET);
-				}
-				return; 
-				
-			} catch (NumberFormatException e) {
-				System.out.println(ANSI_RED + "Invalid ID. Please enter a valid number." + ANSI_RESET);
-
-			}
-		}
-	}
-
-	public void editProduct() throws AmazonProductException {
-		while (true) {
-			System.out.print("Enter the ID of the product to edit: ");
-			try {
-				int id = Integer.parseInt(input.nextLine());
-				AmazonProduct existingProduct = productList.findProductById(id);
-
-				if (existingProduct == null) {
-					System.out.println(ANSI_RED + "Product with ID " + id + " not found. Please try again." + ANSI_RESET);
-					continue;  
-				}
-
-				AmazonProduct updatedProduct = createProduct(id);
-				boolean edited = productList.edit(id, updatedProduct);
-
-				if (edited) {
-					System.out.println(ANSI_PURPLE + "Product successfully edited!" + ANSI_RESET);
-					
-				} else {
-					System.out.println(ANSI_RED + "Failed to edit product." + ANSI_RESET);
-				}
-				return; 
-				
-			} catch (NumberFormatException e) {
-				System.out.println(ANSI_RED + "Invalid ID. Please enter a valid number." + ANSI_RESET);
-
-			}
-		}
-	}
-
-	
-
-	public void saveProductList() throws AmazonProductException {
-		if (productList == null || productList.getSize() == 0) {
-			System.out.println("The product list is empty. Nothing to save.");
-			return;
-		}
-
-		System.out.print("Enter the filename to save: ");
-		String fileName = input.nextLine();
-		productList.saveList(fileName);
-	}
-
-	*/
-	
 
 
 

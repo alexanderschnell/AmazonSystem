@@ -2,7 +2,7 @@ package amazonsystem;
 
 import java.util.ArrayList;
 
-public class AmazonProductUtil {
+public class AmazonSystemUtil {
 
 	public static float convertStrToFloat(String nextLine) {
 		return Float.parseFloat(nextLine);
@@ -38,12 +38,33 @@ public class AmazonProductUtil {
 
 			   if ((i == 8 || i == 9) && (field.contains("₹") || field.contains("â") || field.contains("?"))) {
 		            field = field.replaceAll("[^0-9.]", "");
-			}
-			
+			}			
 			fields.set(i, field);
 		}
-
 		return fields.toArray(new String[0]);
-
 	}
+	
+    // New utility methods
+    public static boolean isValidFloat(String value) {
+        try {
+            float f = Float.parseFloat(value);
+            return f >= 0; 
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidInt(String value) {
+        try {
+            int i = Integer.parseInt(value);
+            return i >= 0; 
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidString(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
 }
+

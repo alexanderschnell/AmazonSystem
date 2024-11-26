@@ -27,30 +27,26 @@ public class AmazonCustomer {
 	}
 	
 	// method had exceptions, changed to return null to pass jUnit test
-	public static AmazonCustomer createAmazonCustomer(String[] customerInfo)  {
+	public static AmazonCustomer createAmazonCustomer(String[] customerInfo) {
+	    if (customerInfo == null || customerInfo.length != 3) {
+	        return null;
+	    }
 
-		if (customerInfo == null || customerInfo.length != 3) {
-			return null;
-		}
-
-		try {
-			int id = Integer.parseInt(customerInfo[0]);
-			if (id <= 0) {
-				return null;
-			}
-
-			if (customerInfo[1] == null || customerInfo[1].trim().isEmpty()) {
-				return null;
-			}
-
-			if (customerInfo[2] == null || customerInfo[2].trim().isEmpty()) {
-				return null;
-			}
-
-			return new AmazonCustomer(id, customerInfo[1], customerInfo[2]);
-		} catch (NumberFormatException e) {
-			return null;
-		}
+	    // Use AmazonSystemUtil validation methods 
+	    if (!AmazonSystemUtil.isValidInt(customerInfo[0]) || 
+	        !AmazonSystemUtil.isValidString(customerInfo[1]) || 
+	        !AmazonSystemUtil.isValidString(customerInfo[2])) {
+	        return null;
+	    }
+	    try {
+	        int id = Integer.parseInt(customerInfo[0]);
+	        if (id <= 0) {
+	            return null;
+	        }
+	        return new AmazonCustomer(id, customerInfo[1], customerInfo[2]);
+	    } catch (NumberFormatException e) {
+	        return null;
+	    }
 	}
 
 	public void addCredit(AmazonCredit credit) {

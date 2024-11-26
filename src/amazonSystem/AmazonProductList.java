@@ -36,7 +36,7 @@ public class AmazonProductList {
 			String line;
 			boolean isFirstLine = true;
 			while ((line = br.readLine()) != null) {
-				String[] fields = AmazonProductUtil.lineReader(line);
+				String[] fields = AmazonSystemUtil.lineReader(line);
 				if (isFirstLine) {
 					COLUMN_HEADERS.clear();
 					COLUMN_HEADERS.addAll(Arrays.asList(fields));
