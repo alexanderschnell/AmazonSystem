@@ -44,7 +44,7 @@ public class AmazonSystemUtil {
 		return fields.toArray(new String[0]);
 	}
 	
-    // New utility methods
+    // A2 utility methods
     public static boolean isValidFloat(String value) {
         try {
             float f = Float.parseFloat(value);

@@ -43,6 +43,7 @@ public class AmazonCart implements AmazonPayable {
         calcSubTotal();
     }
 	
+	// needs validation 
 	public float calcSubTotal() {
 	    orderValue = 0;
 	    for (AmazonCartItem item : cartItems) {
@@ -95,6 +96,7 @@ public class AmazonCart implements AmazonPayable {
 	        }
 	    }
 	
+	// needs validation 
     @Override
     public boolean pay(AmazonCredit credit) {
         if (credit.getAmount() >= this.getOrderValue()) {

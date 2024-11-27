@@ -16,6 +16,7 @@ public abstract class AmazonCredit {
 		setAmount(getAmount() - orderValue);
 	}
 
+	// GETTERS & SETTERS
 	public float getAmount() {
 		return amount;
 	}

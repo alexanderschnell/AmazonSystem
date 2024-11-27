@@ -11,14 +11,7 @@ public class AmazonCard extends AmazonCredit {
         setType(PaymentType.CARD);
     }
     
-    @Override
-    public String toString() {
-        return "Credit Type: " + "[" + getType() + 
-               "], Card Number - [" + number +  
-               "], Expiration Date - [" + expiration + 
-               "], Credit Amount - [" + getAmount() + "]";
-    }
-
+    // needs validation 
     public static AmazonCard createCard(String[] cardInfo) throws AmazonException {
         if (cardInfo == null || cardInfo.length != 3) {
             throw new AmazonException("Invalid card input format");
@@ -37,6 +30,15 @@ public class AmazonCard extends AmazonCredit {
         }
     }
     
+    @Override
+    public String toString() {
+        return "Credit Type: " + "[" + getType() + 
+               "], Card Number - [" + number +  
+               "], Expiration Date - [" + expiration + 
+               "], Credit Amount - [" + getAmount() + "]";
+    }
+
+    // GETTERS & SETTERS
 	public String getNumber() {
 		return number;
 	}

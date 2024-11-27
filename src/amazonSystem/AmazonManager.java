@@ -6,7 +6,8 @@ import java.util.Scanner;
 public class AmazonManager {
 	
 	public String fileName;
-
+	
+	// menu variables 
 	public final String OPTION0_EXIT = "[Q]";
 	public final String OPTION1_LOAD = "[A]";
 	public final String OPTION2_SHOW = "[B]";
@@ -30,7 +31,7 @@ public class AmazonManager {
 	private AmazonProductList productList;
 	private ArrayList<AmazonCustomer> customerList;
 	
-	//ANSI color codes
+	// ANSI color codes
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -45,20 +46,7 @@ public class AmazonManager {
 		customerList = new ArrayList<AmazonCustomer>();		
 	}
 
-	public static void main(String[] args) {
-		AmazonManager manager = new AmazonManager();
-		try {
-			manager.menuController();
-		} catch (RuntimeException e) {
-			System.err.println(ANSI_RED + "An unexpected critical error occurred: " + e.getMessage() + ANSI_RESET);
-			e.printStackTrace();
-
-		} catch (AmazonException e) {
-			e.printStackTrace();
-		}																
-	}
-
-	// New menu controller 
+	// new menu controller 
 	public void menuController() throws AmazonException {
 		String choice;
 		do {
@@ -126,7 +114,7 @@ public class AmazonManager {
 		} while (!choice.equalsIgnoreCase("Q"));
 	}
 	
-	// New menu (Could change to assignment format) 
+	// new menu
 	public void showMenu() {
 		
 		System.out.println();
@@ -170,7 +158,7 @@ public class AmazonManager {
 		input.close();
 	}
 
-	// Taken from A1
+	// taken from A1
 	public void loadProductList() throws AmazonException {
 		boolean isValidFile = false;
 
@@ -189,7 +177,7 @@ public class AmazonManager {
 		}
 	}
 
-	// Taken from A1
+	// taken from A1
 	public void showProductList() {
 		if (productList == null || productList.getSize() == 0) {
 			System.out.println("The product list is empty.");
@@ -206,7 +194,7 @@ public class AmazonManager {
 		}
 	}
 
-	// Taken from A1
+	// taken from A1
 	public void searchInProducts() throws AmazonException  {
 		System.out.print("Enter a keyword to find: ");
 		String keyword = input.nextLine();
@@ -216,6 +204,7 @@ public class AmazonManager {
 		}
 	}
 
+	// create customer 
 	public void addCustomer() {
 	    System.out.print("Enter customer ID: ");
 	    String id = input.nextLine();
@@ -236,6 +225,7 @@ public class AmazonManager {
 	    System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
 	}
 	
+	// show customer info
 	public void showCustomer() {
 		if (customerList == null || customerList.size() == 0) {
 			System.out.println("The customer list is empty.");
@@ -251,6 +241,7 @@ public class AmazonManager {
 		}
 	}
 
+	// add credit to customer
 	public void addCreditToCustomer() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
@@ -307,6 +298,7 @@ public class AmazonManager {
 		}
 	}
 
+	// show the credit added for customer 
 	public void showCreditFromCustomer() {
 
 		System.out.print("Enter the customer ID: ");
@@ -320,6 +312,7 @@ public class AmazonManager {
 		}
 	}
 
+	// add a product in wishlist
 	public void addProductinWishList() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No customer found." + ANSI_RESET);
@@ -359,6 +352,7 @@ public class AmazonManager {
 		}
 	}
 
+	// remove a product from wishlist
 	public void removeProductFromWishList() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No wishlists found." + ANSI_RESET);
@@ -398,6 +392,7 @@ public class AmazonManager {
 		}
 	}
 
+	// show the wishlist 
 	public void showWishList() {
 		if (customerList.isEmpty()) {
 			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
@@ -428,6 +423,7 @@ public class AmazonManager {
 		}
 	}
 
+	// add item into cart 
 	public void addItemInCart() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
@@ -478,6 +474,7 @@ public class AmazonManager {
 		}
 	}
 
+	// remove item from cart 
 	public void removeProductFromCart() throws AmazonException {
 		if (customerList.isEmpty()) {
 			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
@@ -520,6 +517,7 @@ public class AmazonManager {
 		customer.removeProductFromCart(product, quantity);
 	}
 
+	// show the products in cart 
 	public void showProductsInCart() {
 		if (customerList.isEmpty()) {
 			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
@@ -551,6 +549,7 @@ public class AmazonManager {
 		}
 	}
 
+	// pay for the cart items 
 	public void payCart() throws AmazonException {
 	    if (customerList.isEmpty()) {
 	        throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
@@ -594,6 +593,7 @@ public class AmazonManager {
 	    }
 	}
 
+	// add a comment to product
 	public void addCommentToProduct() throws AmazonException {
 		if (customerList.isEmpty()) {
 			throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
@@ -637,16 +637,15 @@ public class AmazonManager {
 	        customer.addComment(commentText);
 	}
 	
+	// show the comments from customers 
 	public void showComments() {
 		if (customerList.isEmpty()) {
 			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
 			return;
 		}
-
 		System.out.print("Enter the Customer ID: ");
 		try {
 			int id = Integer.parseInt(input.nextLine());
-
 
 			AmazonCustomer customer = null;
 			for (AmazonCustomer c : customerList) {
@@ -665,8 +664,23 @@ public class AmazonManager {
 			
 		} catch (NumberFormatException e) {
 			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
-		}
+		}		
 	}
+	
+	// main method 
+	public static void main(String[] args) {
+		AmazonManager manager = new AmazonManager();
+		try {
+			manager.menuController();
+		} catch (RuntimeException e) {
+			System.err.println(ANSI_RED + "An unexpected critical error occurred: " + e.getMessage() + ANSI_RESET);
+			e.printStackTrace();
+
+		} catch (AmazonException e) {
+			e.printStackTrace();
+		}																
+	}
+
 }
 
 
