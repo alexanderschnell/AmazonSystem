@@ -96,28 +96,37 @@ public class AmazonCart implements AmazonPayable {
 	        }
 	    }
 	
-	// needs validation 
-    @Override
-    public boolean pay(AmazonCredit credit) {
-        if (credit.getAmount() >= this.getOrderValue()) {
-            credit.deduct(this.getOrderValue());
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public boolean pay(AmazonCredit credit) {
+	    if (credit == null) {
+	        return false;
+	    }
+	    if (cartItems == null || cartItems.isEmpty()) {
+	        return false;
+	    }
+	    if (!AmazonSystemUtil.isValidFloat(String.valueOf(this.getOrderValue()))) {
+	        return false;
+	    }
+	    if (!AmazonSystemUtil.isValidFloat(String.valueOf(credit.getAmount()))) {
+	        return false;
+	    }
+	    if (credit.getAmount() >= this.getOrderValue()) {
+	        credit.deduct(this.getOrderValue());
+	        return true;
+	    }    
+	    return false;
+	}
 	
 	public String toString() {
 	    String result = "";
-	    int i = 0;
 	    result += "Customer: [" + customer.getName() + "]\n";
 	    result += "Date: [" + date + "]\n";
 	    for (AmazonCartItem item : cartItems) {
 	        if (item != null) {
-	            result += "Product: " + i + item.toString() + "\n";
-	            i++;
+	            result += "Product: " + item.toString() + "\n";
 	        }
 	    }
-	    result += "Total Value: " + orderValue;
+	    result += "Total Value: [" + orderValue + "]";
 	    return result;
 	}
 		

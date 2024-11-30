@@ -50,9 +50,9 @@ public class AmazonProduct {
 				!AmazonSystemUtil.isValidString(data[3]) ||    // subcategory
 				!AmazonSystemUtil.isValidString(data[4]) ||    // image
 				!AmazonSystemUtil.isValidString(data[5]) ||    // url
-				!AmazonSystemUtil.isValidFloat(data[6]) ||     // rating
-				!AmazonSystemUtil.isValidInt(data[7]) ||       // nratings
-				!AmazonSystemUtil.isValidFloat(data[8]) ||     // discPrice
+				!AmazonSystemUtil.isValidFloat(data[6])  ||    // rating
+				!AmazonSystemUtil.isValidInt(data[7])    ||    // nratings
+				!AmazonSystemUtil.isValidFloat(data[8])  ||    // discPrice
 				!AmazonSystemUtil.isValidFloat(data[9])) {     // actPrice
 			return null;
 		}

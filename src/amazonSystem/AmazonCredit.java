@@ -34,7 +34,7 @@ public abstract class AmazonCredit {
 	}
 
 	public String toString() {
-		return "Credit Type: [" + type + "], " + "Credit Amount - [" + amount + "]";
+		return "Customer Credit: Credit Type - [" + type + "], " + "Credit Amount - [" + amount + "]";
 	}
 
 

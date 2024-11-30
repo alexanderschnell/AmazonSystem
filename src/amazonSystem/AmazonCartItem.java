@@ -15,7 +15,7 @@ public class AmazonCartItem {
 	}
 	
 	public String toString() {
-	    return " - [" + product.getId() + ", " + product.getName() + "], Quantity: [" + quantity + "]";
+	    return "[" + product.getId() + ", " + product.getName() + "], Quantity: [" + quantity + "]";
 	}
 	
 	// GETTERS AND SETTERS

@@ -148,7 +148,8 @@ public class AmazonManager {
 		System.out.println(OPTION16_LIST_COMMENTS + " List comments from products\n");		
 		System.out.println(BLACK_BOLD + "...................................");
 		System.out.println(OPTION0_EXIT + " Exit" + ANSI_RESET);
-		System.out.print(CYAN_BOLD + "\nChoose an option: " + ANSI_RESET);
+		System.out.print(CYAN_BOLD + "\nChoose an option: " + ANSI_RESET);	
+		
 	}
 
 	public void exit() {
@@ -168,7 +169,7 @@ public class AmazonManager {
 
 			try {
 				productList.createList(fileName);
-				System.out.println(ANSI_PURPLE + "Product list created successfully!" + ANSI_RESET);
+				System.out.println(ANSI_PURPLE + "[Product list created successfully!]" + ANSI_RESET);
 				isValidFile = true;
 
 			} catch (AmazonException e) {
@@ -194,41 +195,66 @@ public class AmazonManager {
 		}
 	}
 
-	// taken from A1
-	public void searchInProducts() throws AmazonException  {
-		System.out.print("Enter a keyword to find: ");
-		String keyword = input.nextLine();
-		productList.search(keyword);
-		if (!AmazonSystemUtil.isValidString(keyword)) {
-			throw new AmazonException(ANSI_RED + "Search keyword cannot be empty." + ANSI_RESET);
-		}
+	// taken from A1, modified to validate 
+	public void searchInProducts() throws AmazonException {
+	    if (productList == null || productList.getSize() == 0) {
+	        throw new AmazonException(ANSI_RED + "No products loaded to search." + ANSI_RESET);
+	    }
+	    
+	    System.out.print("Enter a keyword to find: ");
+	    String keyword = input.nextLine();
+	    
+	    if (!AmazonSystemUtil.isValidString(keyword)) {
+	        throw new AmazonException(ANSI_RED + "Search keyword cannot be empty." + ANSI_RESET);
+	    }
+	    
+	    productList.search(keyword);
 	}
 
 	// create customer 
-	public void addCustomer() {
+	public void addCustomer() throws AmazonException {
 	    System.out.print("Enter customer ID: ");
-	    String id = input.nextLine();
+	    String idStr = input.nextLine();
+	    
+	    if (!AmazonSystemUtil.isValidInt(idStr)) {
+	        throw new AmazonException(ANSI_RED + "Invalid ID format." + ANSI_RESET);
+	    }
+	    
+	    int id = Integer.parseInt(idStr);
+	   
+	    for (AmazonCustomer customer : customerList) {
+	        if (customer.getId() == id) {
+	            throw new AmazonException(ANSI_RED + "Customer ID already exists." + ANSI_RESET);
+	        }
+	    }
+	    
 	    System.out.print("Enter customer name: ");
 	    String name = input.nextLine();
+	    if (!AmazonSystemUtil.isValidString(name)) {
+	        throw new AmazonException(ANSI_RED + "Invalid name." + ANSI_RESET);
+	    }
+	    
 	    System.out.print("Enter customer address: ");
 	    String address = input.nextLine();
+	    if (!AmazonSystemUtil.isValidString(address)) {
+	        throw new AmazonException(ANSI_RED + "Invalid address." + ANSI_RESET);
+	    }
 
-	    String[] customerData = {id, name, address};
+	    String[] customerData = {idStr, name, address};
 	    AmazonCustomer newCustomer = AmazonCustomer.createAmazonCustomer(customerData);
 	    
 	    if (newCustomer == null) {
-	        System.out.println(ANSI_RED + "Failed to create customer due to invalid input." + ANSI_RESET);
-	        return;
+	        throw new AmazonException(ANSI_RED + "Failed to create customer." + ANSI_RESET);
 	    }
 	    
 	    customerList.add(newCustomer);
-	    System.out.println(ANSI_PURPLE + "Customer added successfully!" + ANSI_RESET);
+	    System.out.println(ANSI_PURPLE + "[Customer added successfully!]" + ANSI_RESET);
 	}
 	
 	// show customer info
 	public void showCustomer() {
 		if (customerList == null || customerList.size() == 0) {
-			System.out.println("The customer list is empty.");
+			System.out.println(ANSI_RED + "The customer list is empty." + ANSI_RESET);
 		} else
 			System.out.println(BLACK_BOLD + "[Printing customer(s) ...]" + ANSI_RESET);
 
@@ -251,8 +277,12 @@ public class AmazonManager {
 		try {
 			int id = Integer.parseInt(input.nextLine());
 
+			// boolean flag check 
+			boolean customerFound = false;
+
 			for (AmazonCustomer customer : customerList) {
 				if (customer.getId() == id) {
+					customerFound = true;
 					System.out.print("Enter the Type of credit ([1]: Cash, [2]: Check, [3]: Card): ");
 					int choice = Integer.parseInt(input.nextLine());
 
@@ -263,7 +293,7 @@ public class AmazonManager {
 						String[] cashInfo = {amount};
 						AmazonCash cash = AmazonCash.createCash(cashInfo);
 						customer.addCredit(cash);
-						System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+						System.out.println(ANSI_PURPLE + "[Credit added with success!]" + ANSI_RESET);
 						break;
 					case 2:
 						System.out.print("Enter Check value: ");
@@ -273,7 +303,7 @@ public class AmazonManager {
 						String[] checkInfo = {checkAmount, accountNumber};
 						AmazonCheck check = AmazonCheck.createCheck(checkInfo);
 						customer.addCredit(check);
-						System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+						System.out.println(ANSI_PURPLE + "[Credit added with success!]" + ANSI_RESET);
 						break;
 					case 3:
 						System.out.print("Enter Card value: ");
@@ -285,11 +315,16 @@ public class AmazonManager {
 						String[] cardInfo = {cardAmount, cardNumber, expiration};
 						AmazonCard card = AmazonCard.createCard(cardInfo);
 						customer.addCredit(card);
-						System.out.println(ANSI_PURPLE + "Credit added with success!" + ANSI_RESET);
+						System.out.println(ANSI_PURPLE + "[Credit added with success!]" + ANSI_RESET);
 						break;
 					default:
 						throw new AmazonException(ANSI_RED + "Invalid credit type selected" + ANSI_RESET);
 					}
+				}
+				
+				if (!customerFound) {
+					System.out.println(ANSI_RED + "Customer not found!" + ANSI_RESET);
+					return;
 				}
 			}
 
@@ -375,7 +410,7 @@ public class AmazonManager {
 				return;
 			}
 
-			System.out.print("Enter the Product ID to  the wishlist: ");
+			System.out.print("Enter the Product ID to remove from the wishlist: ");
 			int productId = Integer.parseInt(input.nextLine());
 
 			AmazonProduct product = productList.findProductById(productId); 
@@ -571,7 +606,7 @@ public class AmazonManager {
 	    }
 
 	    if (customer.getCart() == null || customer.getCart().getCartItems().isEmpty()) {
-	        throw new AmazonException(ANSI_RED + "Cart is empty" + ANSI_RESET);
+	        throw new AmazonException(ANSI_RED + "Cart is empty." + ANSI_RESET);
 	    }
 
 	    System.out.print("Confirm payment by typing [P]: ");
@@ -584,10 +619,11 @@ public class AmazonManager {
 	    float totalAmount = customer.getCart().calcSubTotal();
 	    if (customer.getCredits().getAmount() >= totalAmount) {
 	        customer.getCredits().deduct(totalAmount);
+	        customer.recordPurchases(); 
 	        customer.getCart().getCartItems().clear();
 	        System.out.println(ANSI_PURPLE + "Customer credit updated: Type - " + "[" + customer.getCredits().getType() +
 	                         "]," + " Credit Amount - " + "[" + customer.getCredits().getAmount() + "]");
-	        System.out.println("Cart empty - you can comment products now." + ANSI_RESET);
+	        System.out.println("[Cart empty. You can comment on purchased products now.]" + ANSI_RESET);
 	    } else {
 	        throw new AmazonException(ANSI_RED + "Insufficient credit amount." + ANSI_RESET);
 	    }
@@ -623,7 +659,7 @@ public class AmazonManager {
 			return;  
 		}
 		
-		System.out.println("Commenting product: " + product.toString());
+		System.out.println("Commenting product: " + ANSI_PURPLE + product.toString() + ANSI_RESET);
 		System.out.print("Enter the comment: ");
 		String comment = input.nextLine();
 		System.out.print("Enter the star rating: ");
@@ -638,33 +674,32 @@ public class AmazonManager {
 	}
 	
 	// show the comments from customers 
-	public void showComments() {
-		if (customerList.isEmpty()) {
-			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
-			return;
-		}
-		System.out.print("Enter the Customer ID: ");
-		try {
-			int id = Integer.parseInt(input.nextLine());
+	public void showComments() throws AmazonException {
+	    if (customerList.isEmpty()) {
+	        throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
+	    }
+	    
+	    System.out.print("Enter the Customer ID: ");
+	    try {
+	        int id = Integer.parseInt(input.nextLine());
 
-			AmazonCustomer customer = null;
-			for (AmazonCustomer c : customerList) {
-				if (c.getId() == id) {
-					customer = c;
-					break;
-				}
-			}
+	        AmazonCustomer customer = null;
+	        for (AmazonCustomer c : customerList) {
+	            if (c.getId() == id) {
+	                customer = c;
+	                break;
+	            }
+	        }
 
-			if (customer == null) {
-				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
-				return;
-			}
+	        if (customer == null) {
+	            throw new AmazonException(ANSI_RED + "Customer not found." + ANSI_RESET);
+	        }
 
-			customer.showProductComments();
-			
-		} catch (NumberFormatException e) {
-			System.out.println(ANSI_RED + "Invalid input format." + ANSI_RESET);
-		}		
+	        customer.showProductComments();
+
+	    } catch (NumberFormatException e) {
+	        throw new AmazonException(ANSI_RED + "Invalid input format." + ANSI_RESET);
+	    }
 	}
 	
 	// main method 

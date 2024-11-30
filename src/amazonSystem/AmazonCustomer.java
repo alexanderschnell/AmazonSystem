@@ -12,7 +12,8 @@ public class AmazonCustomer {
 	private ArrayList<AmazonProduct> wishlist = new ArrayList<>();
 	private AmazonCart cart;
 	private ArrayList<AmazonComment> comments = new ArrayList<>();
-
+	private ArrayList<AmazonProduct> purchasedProducts = new ArrayList<>();
+ 
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -24,6 +25,17 @@ public class AmazonCustomer {
 		this.setName(name);
 		this.setAddress(address); 
 		this.cart = new AmazonCart(this, new Date());
+	}
+	
+	// method to record purchases when cart is paid
+	public void recordPurchases() {
+	    if (cart != null) {
+	        for (AmazonCartItem item : cart.getCartItems()) {
+	            if (!purchasedProducts.contains(item.getProduct())) {
+	                purchasedProducts.add(item.getProduct());
+	            }
+	        }
+	    }
 	}
 	
 	// method had exceptions, changed to return null to pass jUnit test
@@ -55,7 +67,7 @@ public class AmazonCustomer {
 
 	public void showCredits() {
 		if (credits == null || credits.size() == 0) {
-			System.out.println("The customer has 0 credits.");
+			System.out.println(ANSI_RED + "The customer has 0 credits." + ANSI_RESET);
 		} else
 
 			for (int i = 0; i < credits.size(); i++) {
@@ -81,7 +93,7 @@ public class AmazonCustomer {
 
 	public void removeProductInWishList(AmazonProduct product) throws AmazonException {
 		if (wishlist == null || wishlist.size() == 0) {
-			System.out.println("The wishlist is empty.");
+			System.out.println(ANSI_RED + "The wishlist is empty." + ANSI_RESET);
 			return;
 		}
 		if (product == null) {
@@ -99,7 +111,7 @@ public class AmazonCustomer {
 
 	public void showWishList() {
 		if (wishlist == null || wishlist.size() == 0) {
-			System.out.println("The wishlist is empty.");
+			System.out.println(ANSI_RED + "The wishlist is empty." + ANSI_RESET);
 		} else 
 
 			for (int i = 0; i < wishlist.size(); i++) {
@@ -129,7 +141,7 @@ public class AmazonCustomer {
 	
 	public void removeProductFromCart(AmazonProduct product, int quantity) throws AmazonException {
 		if (cart == null) {
-			System.out.print("The cart is empty.");
+			System.out.print(ANSI_RED + "The cart is empty." + ANSI_RESET);
 		}
 		if (product == null) {
 			throw new AmazonException("Cannot remove null product from wishlist");
@@ -144,13 +156,13 @@ public class AmazonCustomer {
 		}
 
 		cart.removeItem(product, quantity);
-		System.out.println(ANSI_PURPLE + "Cart updated: [Removed item - " + quantity + " of Product " + product+ 
+		System.out.println(ANSI_PURPLE + "Cart updated: Removed product - " + product+ 
 				" for Customer #" + id + "]" + ANSI_RESET);
 	}
 
 	public void showCart() {
 		if (cart == null || cart.getCartItems().isEmpty()) {
-			System.out.println("The cart is empty.");
+			System.out.println(ANSI_RED + "The cart is empty." + ANSI_RESET);
 			return;
 		}
 		System.out.println(ANSI_PURPLE + cart.toString() + ANSI_RESET);
@@ -171,26 +183,40 @@ public class AmazonCustomer {
 	    latestCredit.deduct(totalAmount);
 	}
 
+	// modified addComment to check if product was purchased
 	public void addComment(AmazonComment comment) {
 	    if (comment == null || comment.getProduct() == null || 
 	        comment.getComment() == null || comment.getComment().trim().isEmpty()) {
 	        return; 
 	    }
+	    
+	    // causing part 3 of comments jUnit test to fail
+	    // chose to adhere to business logic rather than pass unit test  
+	    // check for purchased products
+	    if (!purchasedProducts.contains(comment.getProduct())) {
+	        System.out.println(ANSI_RED + "You can only comment on products you have purchased." + ANSI_RESET);
+	        return;
+	    }
 
 	    comments.add(comment);
-	    System.out.println(ANSI_PURPLE + "Comment from customer: Customer - [Id: " + 
-	                      this.id + "], [Name - " + this.name + "] ..." + ANSI_RESET);
+	    System.out.println(ANSI_PURPLE + "Comment from customer: Customer ID - [" + 
+	                      this.id + "], Name - [" + this.name + "] ..." + ANSI_RESET);
 	}
-
+	
 	public void showProductComments() {
-		if (comments == null || comments.isEmpty()) {
-			System.out.println("No comments available.");
-			return;
-		}
-		for (AmazonComment comment : comments) {
-		System.out.println(ANSI_PURPLE + comment.toString() + ANSI_RESET);
+	    if (comments == null || comments.isEmpty()) {
+	        System.out.println(ANSI_RED + "No comments available." + ANSI_RESET);
+	        return;
+	    }
+	    
+	    for (AmazonComment comment : comments) {
+	        if (comment != null) {
+	            System.out.println(ANSI_PURPLE + "Comment Information: Product Id - [" + comment.getProduct().getId() + "]," +
+	                             " Comment - [" + comment.getComment() + "]," + 
+	                             " Rating - [" + comment.getRating() + "]" + ANSI_RESET);
+	        }
+	    }
 	}
-}
 
 	public String toString() {
 		return "Customer: [Id - " + id + "], [Name - " + name + "], [Address - " + address + "]"; 
