@@ -132,11 +132,7 @@ public class AmazonCustomer {
 	        return;
 	    }
 	    
-	    try {
-	        cart.addItemInCart(item.getProduct(), item.getQuantity());
-	    } catch (AmazonException e) {
-	        return;
-	    }
+	    cart.addItemInCart(item.getProduct(), item.getQuantity());
 	}
 	
 	public void removeProductFromCart(AmazonProduct product, int quantity) throws AmazonException {
@@ -169,18 +165,27 @@ public class AmazonCustomer {
 	}
 
 	// removed exceptions to pass jUnit test
-	public void pay() {
+	public boolean pay() {
 	    if (cart == null || cart.getCartItems().isEmpty()) {
-	        return; 
+	        System.out.println(ANSI_RED + "Cart is empty." + ANSI_RESET);
+	        return false;
 	    }
 
 	    float totalAmount = cart.calcSubTotal();
 	    AmazonCredit latestCredit = getCredits();
 
-	    if (latestCredit == null || latestCredit.getAmount() < totalAmount) {
-	        return; 
+	    if (latestCredit == null) {
+	        System.out.println(ANSI_RED + "No credits available." + ANSI_RESET);
+	        return false;
 	    }
+
+	    if (latestCredit.getAmount() < totalAmount) {
+	        System.out.println(ANSI_RED + "Insufficient credit amount." + ANSI_RESET);
+	        return false;
+	    }
+
 	    latestCredit.deduct(totalAmount);
+	    return true;
 	}
 
 	// modified addComment to check if product was purchased
@@ -190,9 +195,9 @@ public class AmazonCustomer {
 	        return; 
 	    }
 	    
-	    // causing part 3 of comments jUnit test to fail
-	    // chose to adhere to business logic rather than pass unit test  
-	    // check for purchased products
+	    // causing part 3 of 'TestComments' jUnit test to fail
+	    // chose to adhere to business logic   
+	    // checks for purchased products
 	    if (!purchasedProducts.contains(comment.getProduct())) {
 	        System.out.println(ANSI_RED + "You can only comment on products you have purchased." + ANSI_RESET);
 	        return;

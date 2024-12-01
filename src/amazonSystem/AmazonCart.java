@@ -26,24 +26,23 @@ public class AmazonCart implements AmazonPayable {
 		
 	}
 	
-	public void addItemInCart(AmazonProduct product, int quantity) throws AmazonException {
-        if (product == null) {
-            throw new AmazonException("Cannot add null product to cart");
-        }
-        if (quantity <= 0) {
-            throw new AmazonException("Quantity must be positive");
-        }
-        
-        if (hasItem(product)) {
-            throw new AmazonException("Product already exists in cart");
-        }
-        
-        AmazonCartItem item = new AmazonCartItem(product, quantity);
-        cartItems.add(item);  
-        calcSubTotal();
-    }
+	public boolean addItemInCart(AmazonProduct product, int quantity) {
+	    if (product == null || quantity <= 0) {
+	        return false;
+	    }
+	    for (AmazonCartItem item : cartItems) {
+	        if (item.getProduct().equals(product)) {
+	            item.setQuantity(item.getQuantity() + quantity);
+	            calcSubTotal();
+	            return true;
+	        }
+	    }
+	    AmazonCartItem item = new AmazonCartItem(product, quantity);
+	    cartItems.add(item);
+	    calcSubTotal();
+	    return true;
+	}
 	
-	// needs validation 
 	public float calcSubTotal() {
 	    orderValue = 0;
 	    for (AmazonCartItem item : cartItems) {
@@ -64,56 +63,65 @@ public class AmazonCart implements AmazonPayable {
 	}
 	
 	public void removeItem(AmazonProduct product, int quantity) throws AmazonException {
-		
-	      if (product == null) {
-	            throw new AmazonException("Cannot add null product to cart");
-	        }
-	        if (quantity <= 0) {
-	            throw new AmazonException("Quantity must be positive");
-	        }
-	        
-	        if (!hasItem(product)) {
-	            throw new AmazonException("Product not found in cart");
-	        }
-	        
-	        AmazonCartItem itemToRemove = null;
-	        for (AmazonCartItem item : cartItems) {
-	            if (item.getProduct().equals(product)) {
-	                itemToRemove = item;
-	                break;
-	            }
-	        }
+	    if (product == null) {
+	        throw new AmazonException("Cannot add null product to cart");
+	    }
+	    if (quantity <= 0) {
+	        throw new AmazonException("Quantity must be positive");
+	    }
+	    if (!hasItem(product)) {
+	        throw new AmazonException("Product not found in cart");
+	    }
 
-	        if (itemToRemove != null) {
-	            if (quantity > itemToRemove.getQuantity()) {
-	                throw new AmazonException("Not enough items to remove");
-	            }
-	            if (quantity == itemToRemove.getQuantity()) {
-	                cartItems.remove(itemToRemove);
-	            } else {
-	                itemToRemove.setQuantity(itemToRemove.getQuantity() - quantity);
-	            }
+	    AmazonCartItem itemToRemove = null;
+	    for (AmazonCartItem item : cartItems) {
+	        if (item.getProduct().equals(product)) {
+	            itemToRemove = item;
+	            break;
 	        }
 	    }
+
+	    if (itemToRemove != null) {
+	        if (quantity > itemToRemove.getQuantity()) {
+	            throw new AmazonException("Not enough items to remove");
+	        }
+	        if (quantity == itemToRemove.getQuantity()) {
+	            cartItems.remove(itemToRemove);
+	        } else {
+	            itemToRemove.setQuantity(itemToRemove.getQuantity() - quantity);
+	        }
+	        
+	        //calculate the order value after modifying cart
+	        calcSubTotal();
+	    }
+	}
 	
 	@Override
 	public boolean pay(AmazonCredit credit) {
+	    // check if customer has any credits
 	    if (credit == null) {
+	        System.out.println(ANSI_RED + "No credits available." + ANSI_RESET);
 	        return false;
 	    }
+
 	    if (cartItems == null || cartItems.isEmpty()) {
 	        return false;
 	    }
+
 	    if (!AmazonSystemUtil.isValidFloat(String.valueOf(this.getOrderValue()))) {
 	        return false;
 	    }
+
 	    if (!AmazonSystemUtil.isValidFloat(String.valueOf(credit.getAmount()))) {
 	        return false;
 	    }
+
 	    if (credit.getAmount() >= this.getOrderValue()) {
 	        credit.deduct(this.getOrderValue());
 	        return true;
-	    }    
+	    }
+	    
+	    System.out.println(ANSI_RED + "Insufficient credit amount." + ANSI_RESET);
 	    return false;
 	}
 	

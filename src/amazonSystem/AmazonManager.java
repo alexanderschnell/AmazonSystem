@@ -181,7 +181,7 @@ public class AmazonManager {
 	// taken from A1
 	public void showProductList() {
 		if (productList == null || productList.getSize() == 0) {
-			System.out.println("The product list is empty.");
+			System.out.println(ANSI_RED + "No products found." + ANSI_RESET);
 			return;
 		} else 
 			System.out.println(BLACK_BOLD + "[Printing Productlist ...]" + ANSI_RESET);
@@ -254,7 +254,7 @@ public class AmazonManager {
 	// show customer info
 	public void showCustomer() {
 		if (customerList == null || customerList.size() == 0) {
-			System.out.println(ANSI_RED + "The customer list is empty." + ANSI_RESET);
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 		} else
 			System.out.println(BLACK_BOLD + "[Printing customer(s) ...]" + ANSI_RESET);
 
@@ -270,7 +270,7 @@ public class AmazonManager {
 	// add credit to customer
 	public void addCreditToCustomer() throws AmazonException {
 		if (customerList.isEmpty()) {
-			System.out.println(ANSI_RED + "No customers found!" + ANSI_RESET);
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 			return;
 		}
 		System.out.print("Enter the Customer ID: ");
@@ -296,15 +296,15 @@ public class AmazonManager {
 						System.out.println(ANSI_PURPLE + "[Credit added with success!]" + ANSI_RESET);
 						break;
 					case 2:
-						System.out.print("Enter Check value: ");
-						String checkAmount = input.nextLine();
-						System.out.print("Enter Account Number: ");
-						String accountNumber = input.nextLine();
-						String[] checkInfo = {checkAmount, accountNumber};
-						AmazonCheck check = AmazonCheck.createCheck(checkInfo);
-						customer.addCredit(check);
-						System.out.println(ANSI_PURPLE + "[Credit added with success!]" + ANSI_RESET);
-						break;
+					    System.out.print("Enter Check value: ");
+					    String checkAmount = input.nextLine();
+					    System.out.print("Enter Account Number: ");
+					    String accountNumber = input.nextLine();
+					    String[] checkInfo = {accountNumber, checkAmount};  // swapped to match constructor
+					    AmazonCheck check = AmazonCheck.createCheck(checkInfo);
+					    customer.addCredit(check);
+					    System.out.println(ANSI_PURPLE + "[Credit added with success!]" + ANSI_RESET);
+					    break;
 					case 3:
 						System.out.print("Enter Card value: ");
 						String cardAmount = input.nextLine();
@@ -320,12 +320,14 @@ public class AmazonManager {
 					default:
 						throw new AmazonException(ANSI_RED + "Invalid credit type selected" + ANSI_RESET);
 					}
+					break;
 				}
-				
-				if (!customerFound) {
-					System.out.println(ANSI_RED + "Customer not found!" + ANSI_RESET);
-					return;
-				}
+
+
+			}
+			if (!customerFound) {
+				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
+				return;
 			}
 
 		} catch (NumberFormatException e) {
@@ -335,7 +337,10 @@ public class AmazonManager {
 
 	// show the credit added for customer 
 	public void showCreditFromCustomer() {
-
+		
+		if (customerList.isEmpty()) {
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
+		} else {
 		System.out.print("Enter the customer ID: ");
 		int id = Integer.parseInt(input.nextLine());
 
@@ -346,11 +351,12 @@ public class AmazonManager {
 			}
 		}
 	}
-
+}
+	
 	// add a product in wishlist
 	public void addProductinWishList() throws AmazonException {
 		if (customerList.isEmpty()) {
-			System.out.println(ANSI_RED + "No customer found." + ANSI_RESET);
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 			return; 
 		}
 		System.out.print("Enter the Customer ID: ");
@@ -390,7 +396,7 @@ public class AmazonManager {
 	// remove a product from wishlist
 	public void removeProductFromWishList() throws AmazonException {
 		if (customerList.isEmpty()) {
-			System.out.println(ANSI_RED + "No wishlists found." + ANSI_RESET);
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 		} else
 
 			System.out.print("Enter the Customer ID: ");
@@ -430,7 +436,7 @@ public class AmazonManager {
 	// show the wishlist 
 	public void showWishList() {
 		if (customerList.isEmpty()) {
-			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 			return;
 		}
 
@@ -480,7 +486,7 @@ public class AmazonManager {
 				System.out.println(ANSI_RED + "Customer not found." + ANSI_RESET);
 				return;
 			}
-			System.out.print("Enter the Product ID to buy from your cart: ");
+			System.out.print("Enter the Product ID to include in the cart: ");
 			int productId = Integer.parseInt(input.nextLine());
 
 			AmazonProduct product = productList.findProductById(productId); 
@@ -490,7 +496,7 @@ public class AmazonManager {
 				return;  
 			}
 
-			System.out.print("Enter the number of items to put in cart: ");
+			System.out.print("Enter the number of items to include in the cart: ");
 			int quantity = Integer.parseInt(input.nextLine());
 
 			if (quantity <= 0) {
@@ -531,7 +537,7 @@ public class AmazonManager {
 			return;
 		}
 
-		System.out.print("Enter the Product ID to remove from your cart: ");
+		System.out.print("Enter the Product ID to remove from the cart: ");
 		int productId = Integer.parseInt(input.nextLine());
 
 		AmazonProduct product = productList.findProductById(productId); 
@@ -541,7 +547,7 @@ public class AmazonManager {
 			return;  
 		}
 
-		System.out.print("Enter the number of items to remove from cart: ");
+		System.out.print("Enter the number of items to remove from the cart: ");
 		int quantity = Integer.parseInt(input.nextLine());
 
 		if (quantity <= 0) {
@@ -555,7 +561,7 @@ public class AmazonManager {
 	// show the products in cart 
 	public void showProductsInCart() {
 		if (customerList.isEmpty()) {
-			System.out.print(ANSI_RED + "No customers found." + ANSI_RESET);
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
 			return;
 		}
 
@@ -606,34 +612,34 @@ public class AmazonManager {
 	    }
 
 	    if (customer.getCart() == null || customer.getCart().getCartItems().isEmpty()) {
-	        throw new AmazonException(ANSI_RED + "Cart is empty." + ANSI_RESET);
-	    }
+	        System.out.println(ANSI_RED + "Cart is empty." + ANSI_RESET);
+	    } else {
+	        float totalAmount = customer.getCart().calcSubTotal();
+	        if (customer.getCredits() == null || customer.getCredits().getAmount() < totalAmount) {
+	            throw new AmazonException(ANSI_RED + "No credits available." + ANSI_RESET);
+	        }
 
-	    System.out.print("Confirm payment by typing [P]: ");
-	    String choice = input.nextLine();
+	        System.out.print("Confirm payment by typing [P]: ");
+	        String choice = input.nextLine();
 
-	    if (!choice.equalsIgnoreCase("p")) {
-	        throw new AmazonException(ANSI_RED + "No credits available." + ANSI_RESET);
-	    }
+	        if (!choice.equalsIgnoreCase("p")) {
+	            throw new AmazonException(ANSI_RED + "Invalid input." + ANSI_RESET);
+	        }
 
-	    float totalAmount = customer.getCart().calcSubTotal();
-	    if (customer.getCredits().getAmount() >= totalAmount) {
 	        customer.getCredits().deduct(totalAmount);
-	        customer.recordPurchases(); 
+	        customer.recordPurchases();
 	        customer.getCart().getCartItems().clear();
 	        System.out.println(ANSI_PURPLE + "Customer credit updated: Type - " + "[" + customer.getCredits().getType() +
-	                         "]," + " Credit Amount - " + "[" + customer.getCredits().getAmount() + "]");
+	                "]," + " Amount - " + "[" + customer.getCredits().getAmount() + "]");
 	        System.out.println("[Cart empty. You can comment on purchased products now.]" + ANSI_RESET);
-	    } else {
-	        throw new AmazonException(ANSI_RED + "Insufficient credit amount." + ANSI_RESET);
 	    }
 	}
 
 	// add a comment to product
 	public void addCommentToProduct() throws AmazonException {
 		if (customerList.isEmpty()) {
-			throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
-		}
+			System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
+		} else {
 		
 		System.out.print("Enter the customer ID: ");
 		int id = Integer.parseInt(input.nextLine());
@@ -672,12 +678,13 @@ public class AmazonManager {
 		 	AmazonComment commentText = new AmazonComment(product, comment, rating);
 	        customer.addComment(commentText);
 	}
+	}
 	
 	// show the comments from customers 
 	public void showComments() throws AmazonException {
 	    if (customerList.isEmpty()) {
-	        throw new AmazonException(ANSI_RED + "No customers found." + ANSI_RESET);
-	    }
+	        System.out.println(ANSI_RED + "No customers found." + ANSI_RESET);
+	    } else {
 	    
 	    System.out.print("Enter the Customer ID: ");
 	    try {
@@ -701,6 +708,7 @@ public class AmazonManager {
 	        throw new AmazonException(ANSI_RED + "Invalid input format." + ANSI_RESET);
 	    }
 	}
+	}
 	
 	// main method 
 	public static void main(String[] args) {
@@ -715,7 +723,6 @@ public class AmazonManager {
 			e.printStackTrace();
 		}																
 	}
-
 }
 
 

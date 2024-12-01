@@ -35,7 +35,7 @@ public class AmazonCard extends AmazonCredit {
         return "Credit Type: " + "[" + getType() + 
                "], Card Number - [" + number +  
                "], Expiration Date - [" + expiration + 
-               "], Credit Amount - [" + getAmount() + "]";
+               "], Amount - [" + getAmount() + "]";
     }
 
     // GETTERS & SETTERS

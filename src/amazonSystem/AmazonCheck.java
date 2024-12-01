@@ -17,11 +17,11 @@ public class AmazonCheck extends AmazonCredit {
         this.accountNumber = accountNumber;
     }
 
-	@Override
+    @Override
     public String toString() {
         return "Credit Type: [" + getType() + 
-               "], Account - [" + accountNumber + 
-               "], Value - [" + getAmount() + "]";
+               "], Account Number - [" + getAccountNumber() + 
+               "], Amount - [" + getAmount() + "]";
     }
 
     public static AmazonCheck createCheck(String[] data) {
